@@ -117,6 +117,7 @@ func Lsolve(A, b Matrix, option int) (
 
 	output = string(out)
 
+	// TODO: create SparseMatrix
 	// TODO: add read solution
 	// solution := readMatrix(solutionFilename)
 

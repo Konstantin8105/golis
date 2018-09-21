@@ -8,7 +8,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-func TestLis(t *testing.T) {
+func TestLsolve(t *testing.T) {
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		4.0, 1.0,
@@ -22,7 +22,7 @@ func TestLis(t *testing.T) {
 	fmt.Println(s, r, o, err)
 }
 
-func TestLisFail(t *testing.T) {
+func TestLsolveFail(t *testing.T) {
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		1.0, 2.0,
