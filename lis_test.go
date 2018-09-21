@@ -18,6 +18,23 @@ func TestLis(t *testing.T) {
 		9.0,
 	})
 
-	s, r, o, e := golis.Lsolve(A, b, 0)
-	fmt.Println(s, r, o, e)
+	s, r, o, err := golis.Lsolve(A, b, 0)
+	fmt.Println(s, r, o, err)
+}
+
+func TestLisFail(t *testing.T) {
+	A := mat.NewDense(2, 2, []float64{
+		1.0, 2.0,
+		1.0, 2.0,
+	})
+	b := mat.NewDense(2, 1, []float64{
+		4.0,
+		4.0,
+	})
+
+	s, r, o, err := golis.Lsolve(A, b, 0)
+	fmt.Println(s, r, o, err)
+	if err == nil {
+		t.Fatalf("Haven`t error : %v", err)
+	}
 }
