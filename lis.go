@@ -121,6 +121,17 @@ func Lsolve(A, b Matrix, option int) (
 	// TODO: add read solution
 	// solution := readMatrix(solutionFilename)
 
+	sol, err := ioutil.ReadFile(solutionFilename)
+	if err != nil {
+		return
+	}
+	fmt.Println("sol = ", string(sol))
+	rhi, err := ioutil.ReadFile(rhistoryFilename)
+	if err != nil {
+		return
+	}
+	fmt.Println("rhi = ", string(rhi))
+
 	// TODO: rhistory
 
 	return
