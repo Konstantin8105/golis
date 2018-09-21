@@ -58,13 +58,13 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 	for i := 0; i < rA; i++ {
 		for j := 0; j < cA; j++ {
 			if A.At(i, j) != 0.0 {
-				buf.WriteString(fmt.Sprintf("%d %d %20e\n", i+1, j+1, A.At(i, j)))
+				buf.WriteString(fmt.Sprintf("%d %d %20.16e\n", i+1, j+1, A.At(i, j)))
 			}
 		}
 	}
 	// write vector b
 	for i := 0; i < rb; i++ {
-		buf.WriteString(fmt.Sprintf("%d %20e\n", i+1, b.At(i, 0)))
+		buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
 	}
 
 	return buf.Bytes()
@@ -87,6 +87,8 @@ func Lsolve(A, b Matrix, option int) (
 		return
 	}
 
+	fmt.Println("Temp dir : ", tmpDir)
+
 	fn := func(name string) string {
 		return filepath.Join(tmpDir, string(filepath.Separator), name)
 	}
@@ -98,9 +100,9 @@ func Lsolve(A, b Matrix, option int) (
 		rhistoryFilename = fn("rhistory.txt")
 	)
 
-	err = ioutil.WriteFile(inputFilename,
-		convertMatrixWithVector(A, b),
-		0644)
+	inp := convertMatrixWithVector(A, b)
+	fmt.Println("inp = ", string(inp))
+	err = ioutil.WriteFile(inputFilename, inp, 0644)
 	if err != nil {
 		return
 	}
