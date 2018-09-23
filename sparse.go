@@ -11,7 +11,7 @@ type triple struct {
 }
 
 type SparseSquareMatrix struct {
-	size int // size of matrix
+	size int // size of square matrix. Columns and rows is same
 	data struct {
 		ts          []triple // non-zero value in matrix
 		amountAdded int      // amount unsorted of triples
@@ -60,7 +60,7 @@ func (m *SparseSquareMatrix) Set(r, c int, value float64) {
 		return m.data.ts[i].position >= position
 	})
 
-	if m.data.ts[index].position == position {
+	if index < len(m.data.ts) && m.data.ts[index].position == position {
 		m.data.ts[index].d = value
 		return
 	}
@@ -107,10 +107,7 @@ func (m *SparseSquareMatrix) compress() {
 
 	// summarize element with same indexes row, column and add 0.0 in old element
 	for i := 1; i < len(m.data.ts); i++ {
-		if m.data.ts[i-1].r != m.data.ts[i].r {
-			continue
-		}
-		if m.data.ts[i-1].c != m.data.ts[i].c {
+		if m.data.ts[i-1].position != m.data.ts[i].position {
 			continue
 		}
 		// triples element i-1 and i have same row and column
@@ -119,11 +116,40 @@ func (m *SparseSquareMatrix) compress() {
 	}
 
 	// moving data for avoid elements with 0.0 values
-	for i := 0; i < len(m.data.ts); i++ {
+	var nonZeroPos int
+	for zeroPos := 0; zeroPos < len(m.data.ts); zeroPos++ {
+		// find position of zero value triple
+		if m.data.ts[zeroPos].d != 0.0 {
+			continue
+		}
+
+		// find next non-zero value triple
+		if nonZeroPos < zeroPos {
+			nonZeroPos = zeroPos
+		}
+		for ; nonZeroPos < len(m.data.ts); nonZeroPos++ {
+			if m.data.ts[nonZeroPos].d == 0.0 {
+				continue
+			}
+		}
+		if nonZeroPos >= len(m.data.ts) {
+			break
+		}
+
+		// move value
+		m.data.ts[zeroPos] = m.data.ts[nonZeroPos]
+		m.data.ts[nonZeroPos].d = 0.0
 	}
 
 	// cut triple slice by nonzero elements
-	// TODO
+	for i := len(m.data.ts) - 1; i >= 0; i-- {
+		if m.data.ts[i].d != 0.0 {
+			m.data.ts = m.data.ts[:i+1]
+			break
+		}
+	}
+
+	m.data.amountAdded = 0
 }
 
 // Add is alternative of pattern m.Set(r,c, someValue + m.At(r,c)).
@@ -134,7 +160,7 @@ func (m *SparseSquareMatrix) Add(r, c int, value float64) {
 	position := int64(r) + int64(c)*int64(m.size) // calculate position
 	m.data.ts = append(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
-	if m.data.amountAdded > size {
+	if m.data.amountAdded > m.size {
 		m.compress()
 	}
 }
