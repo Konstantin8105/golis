@@ -40,7 +40,7 @@ func (m *SparseSquareMatrix) At(r, c int) float64 {
 		return m.data.ts[i].position >= position
 	})
 
-	if m.data.ts[index].position == position {
+	if index < len(m.data.ts) && m.data.ts[index].position == position {
 		return m.data.ts[index].d
 	}
 
