@@ -22,7 +22,7 @@ type SparseSquareMatrix struct {
 func NewSparseSquareMatrix(size int) *SparseSquareMatrix {
 	m := new(SparseSquareMatrix)
 	m.size = size
-	m.data.ts = make([]triple, 0, size)
+	m.data.ts = make([]triple, 0, size) // TODO: may be size must be more
 	return m
 }
 
@@ -65,6 +65,7 @@ func (m *SparseSquareMatrix) Set(r, c int, value float64) {
 		return
 	}
 
+	// TODO: append can multiply memory by 2 - it is not effective
 	m.data.ts = append(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
 }
@@ -111,7 +112,7 @@ func (m *SparseSquareMatrix) compress() {
 			continue
 		}
 		// triples element i-1 and i have same row and column
-		m.data.ts[i-1].d += m.data.ts[i].d
+		m.data.ts[i-1].d += m.data.ts[i].d // TODO: add float64 limit checking
 		m.data.ts[i].d = 0.0
 	}
 
@@ -158,6 +159,7 @@ func (m *SparseSquareMatrix) Add(r, c int, value float64) {
 	m.check(r, c)
 	checkValue(value)
 	position := int64(r) + int64(c)*int64(m.size) // calculate position
+	// TODO: append can multiply memory by 2 - it is not effective
 	m.data.ts = append(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
 	if m.data.amountAdded > m.size {
@@ -170,3 +172,6 @@ func (m *SparseSquareMatrix) Add(r, c int, value float64) {
 func (m *SparseSquareMatrix) Dims() (r, c int) {
 	return m.size, m.size
 }
+
+// TODO: add function of matrix : get Min and Max absolute value for checking singular
+// TODO: need research of memory for operation Add
