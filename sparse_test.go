@@ -91,6 +91,24 @@ func TestSparseSquareMatrix(t *testing.T) {
 			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
 		}
 	})
+
+	t.Run("Matrix with zero values", func(t *testing.T) {
+		a := mat.NewDense(3, 3, make([]float64, 9))
+		s := golis.NewSparseSquareMatrix(3)
+		if !isSame(s, a) {
+			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+		}
+	})
+
+	t.Run("Sparse matrix", func(t *testing.T) {
+		a := mat.NewDense(3, 3, make([]float64, 9))
+		a.Set(1, 1, 42)
+		s := golis.NewSparseSquareMatrix(3)
+		s.Set(1, 1, 42)
+		if !isSame(s, a) {
+			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+		}
+	})
 }
 
 func isSame(s *golis.SparseSquareMatrix, a *mat.Dense) bool {
