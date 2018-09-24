@@ -61,6 +61,25 @@ func TestLsolveFail(t *testing.T) {
 	}
 }
 
+func TestLsolveFail2(t *testing.T) {
+	A := mat.NewDense(3, 3, []float64{
+		3.0, 1.0, 3.0,
+		1.0, 1.0, 1.0,
+		2.0, 2.0, 2.0,
+	})
+	b := mat.NewDense(3, 1, []float64{
+		1.0,
+		2.0,
+		4.0,
+	})
+
+	s, r, o, err := golis.Lsolve(A, b, 0)
+	fmt.Println(s, r, o, err)
+	if err == nil {
+		t.Fatalf("Haven`t error : %v", err)
+	}
+}
+
 func TestTodo(t *testing.T) {
 	// Show all to do`s in comment code
 	source, err := filepath.Glob(fmt.Sprintf("./%s", "*.go"))
