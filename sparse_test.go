@@ -167,3 +167,25 @@ func isSame(s *golis.SparseMatrix, a *mat.Dense) bool {
 	}
 	return true
 }
+
+func TestParse(t *testing.T) {
+	b := []byte(`%%MatrixMarket vector coordinate real general
+3
+1  -5.49999999999999822364e+00
+2   2.49999999999999955591e+00
+3   4.99999999999999911182e+00`)
+
+	s, err := golis.ParseSparseMatrix(b)
+	if err != nil {
+		t.Fatalf("Cannot parse : %v", err)
+	}
+
+	a := mat.NewDense(3, 1, []float64{
+		-5.49999999999999822364e+00,
+		2.49999999999999955591e+00,
+		4.99999999999999911182e+00,
+	})
+	if !isSame(s, a) {
+		t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+	}
+}
