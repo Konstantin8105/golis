@@ -102,6 +102,8 @@ func (m *SparseMatrix) check(r, c int) {
 // Intermediante     : [1 1 0.6] [1 2 0.5] [1 1 0.0]
 // After  compression: [1 1 0.6] [1 2 0.5]
 func (m *SparseMatrix) compress() {
+	// check only with zero for force compression in
+	// parsing case
 	if m.data.amountAdded == 0 {
 		// compression is no need
 		return
@@ -274,6 +276,10 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 		}
 		v.data.ts = append(v.data.ts, t)
 	}
+
+	// compress
+	v.data.amountAdded = -1
+	v.compress()
 
 	return v, nil
 }
