@@ -245,6 +245,9 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 		if i < 2 {
 			continue
 		}
+		if len(bytes.TrimSpace(lines[i])) == 0 {
+			continue
+		}
 		pars := bytes.Split(lines[i], []byte(" "))
 		var t triple
 		// parse index
@@ -252,7 +255,7 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 			err = fmt.Errorf("Cannot parse index `%v`: %v", string(pars[0]), err)
 			return nil, err
 		} else {
-			t.position = s
+			t.position = s - 1 // in MatrixMarket index from 1, but not zero
 		}
 		// parse value
 		for pos := 1; pos < len(pars); pos++ {
