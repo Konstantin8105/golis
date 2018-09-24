@@ -119,10 +119,6 @@ func Lsolve(A, b Matrix, option int) (
 
 	output = string(out)
 
-	// TODO: create SparseMatrix
-	// TODO: add read solution
-	// solution := readMatrix(solutionFilename)
-
 	sol, err := ioutil.ReadFile(solutionFilename)
 	if err != nil {
 		return
@@ -132,12 +128,12 @@ func Lsolve(A, b Matrix, option int) (
 		return
 	}
 
-	rhi, err := ioutil.ReadFile(rhistoryFilename)
-	if err != nil {
-		return
-	}
-	fmt.Println("rhi = ", string(rhi))
-
+	// rhi, err := ioutil.ReadFile(rhistoryFilename)
+	// if err != nil {
+	// 	return
+	// }
+	// fmt.Println("rhi = ", string(rhi))
+	//
 	// TODO: rhistory
 
 	return
