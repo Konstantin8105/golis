@@ -179,6 +179,7 @@ func (m *SparseMatrix) compress() {
 // TODO : add standart output for sparse matrix
 // TODO : add example
 func (m *SparseMatrix) stringByColumn() string {
+	m.compress()
 	s := "\n"
 	for i := range m.data.ts {
 		s += fmt.Sprintf("%5d) %5d %10.9e\n",
