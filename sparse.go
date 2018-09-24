@@ -215,11 +215,12 @@ func (m *SparseMatrix) Dims() (r, c int) {
 //
 // Example:
 //
-// %%MatrixMarket vector coordinate real general
-// 3
-// 1  -5.49999999999999822364e+00
-// 2   2.49999999999999955591e+00
-// 3   4.99999999999999911182e+00
+//  %%MatrixMarket vector coordinate real general
+//  3
+//  1  -5.49999999999999822364e+00
+//  2   2.49999999999999955591e+00
+//  3   4.99999999999999911182e+00
+//
 func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 
 	v = new(SparseMatrix)
