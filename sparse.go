@@ -178,6 +178,7 @@ func (m *SparseMatrix) compress() {
 
 // TODO : add standart output for sparse matrix
 // TODO : add example
+// TODO : fmt.Formatted
 func (m *SparseMatrix) stringByColumn() string {
 	m.compress()
 	s := "\n"
