@@ -123,11 +123,12 @@ func Lsolve(A, b Matrix, option int) (
 	// TODO: add read solution
 	// solution := readMatrix(solutionFilename)
 
-	sol, err := ioutil.ReadFile(solutionFilename)
-	if err != nil {
-		return
-	}
-	fmt.Println("sol = ", string(sol))
+	// TODO
+	// solution, err := NewSparseVectorFromFile(solutionFilename)
+	// if err != nil {
+	// 	return
+	// }
+
 	rhi, err := ioutil.ReadFile(rhistoryFilename)
 	if err != nil {
 		return

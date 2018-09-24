@@ -13,30 +13,32 @@ type triple struct {
 
 // TODO add research for finding limit size
 // TODO create garantee for memory = amount of non-zero element + size
-type SparseSquareMatrix struct {
-	size int // size of square matrix. Columns and rows is same
+type SparseMatrix struct {
+	r    int // amount of matrix rows
+	c    int // amount of matrix columns
 	data struct {
 		ts          []triple // non-zero value in matrix
 		amountAdded int      // amount unsorted of triples
 	}
 }
 
-// NewSparseSquareMatrix return new sparse square matrix
-func NewSparseSquareMatrix(size int) *SparseSquareMatrix {
-	m := new(SparseSquareMatrix)
-	m.size = size
-	m.data.ts = make([]triple, 0, size) // TODO: may be size must be more
+// NewSparseMatrix return new sparse square matrix
+func NewSparseMatrix(r, c int) *SparseMatrix {
+	m := new(SparseMatrix)
+	m.r = r
+	m.c = c
+	m.data.ts = make([]triple, 0, r*c) // TODO: may be size must be more
 	return m
 }
 
 // At returns the value of a matrix element at row i, column j.
 // It will panic if i or j are out of bounds for the matrix.
-func (m *SparseSquareMatrix) At(r, c int) float64 {
+func (m *SparseMatrix) At(r, c int) float64 {
 	m.check(r, c)
 	m.compress()
 
 	// calculate position
-	position := int64(r) + int64(c)*int64(m.size)
+	position := int64(r) + int64(c)*int64(m.r)
 
 	// binary search of position
 	index := sort.Search(len(m.data.ts), func(i int) bool {
@@ -49,13 +51,13 @@ func (m *SparseSquareMatrix) At(r, c int) float64 {
 	return 0.0
 }
 
-func (m *SparseSquareMatrix) Set(r, c int, value float64) {
+func (m *SparseMatrix) Set(r, c int, value float64) {
 	m.check(r, c)
 	checkValue(value)
 	m.compress()
 
 	// calculate position
-	position := int64(r) + int64(c)*int64(m.size)
+	position := int64(r) + int64(c)*int64(m.r)
 
 	// binary search of position
 	index := sort.Search(len(m.data.ts), func(i int) bool {
@@ -82,12 +84,12 @@ func checkValue(v float64) {
 	}
 }
 
-func (m *SparseSquareMatrix) check(r, c int) {
+func (m *SparseMatrix) check(r, c int) {
 	// TODO : add tree error panic
-	if r < 0 || r >= m.size {
+	if r < 0 || r >= m.r {
 		panic("index out of range")
 	}
-	if c < 0 || c >= m.size {
+	if c < 0 || c >= m.c {
 		panic("index out of range")
 	}
 }
@@ -97,7 +99,7 @@ func (m *SparseSquareMatrix) check(r, c int) {
 // Before compression: [1 1 0.1] [1 2 0.5] [1 1 0.5]
 // Intermediante     : [1 1 0.6] [1 2 0.5] [1 1 0.0]
 // After  compression: [1 1 0.6] [1 2 0.5]
-func (m *SparseSquareMatrix) compress() {
+func (m *SparseMatrix) compress() {
 	if m.data.amountAdded == 0 {
 		// compression is no need
 		return
@@ -170,7 +172,7 @@ func (m *SparseSquareMatrix) compress() {
 	}
 }
 
-func (m *SparseSquareMatrix) stringByColumn() string {
+func (m *SparseMatrix) stringByColumn() string {
 	s := "\n"
 	for i := range m.data.ts {
 		s += fmt.Sprintf("%5d) %5d %10.9e\n",
@@ -181,22 +183,26 @@ func (m *SparseSquareMatrix) stringByColumn() string {
 
 // Add is alternative of pattern m.Set(r,c, someValue + m.At(r,c)).
 // Addition value to matrix element
-func (m *SparseSquareMatrix) Add(r, c int, value float64) {
+func (m *SparseMatrix) Add(r, c int, value float64) {
 	m.check(r, c)
 	checkValue(value)
-	position := int64(r) + int64(c)*int64(m.size) // calculate position
+	position := int64(r) + int64(c)*int64(m.r) // calculate position
 	// TODO: append can multiply memory by 2 - it is not effective
 	m.data.ts = append(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
-	if m.data.amountAdded > m.size {
+	max := m.c
+	if m.r > m.c {
+		max = m.r
+	}
+	if m.data.amountAdded > max {
 		m.compress()
 	}
 }
 
 // Dims returns the dimensions of a Matrix.
 // Where: r - amount of rows, c - amount of columns.
-func (m *SparseSquareMatrix) Dims() (r, c int) {
-	return m.size, m.size
+func (m *SparseMatrix) Dims() (r, c int) {
+	return m.r, m.c
 }
 
 // TODO: add function of matrix : get Min and Max absolute value for checking singular

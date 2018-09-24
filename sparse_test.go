@@ -7,7 +7,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-func TestSparseSquareMatrix(t *testing.T) {
+func TestSparseMatrix(t *testing.T) {
 	a := mat.NewDense(3, 3, []float64{
 		8, 1, 6,
 		3, 5, 7,
@@ -15,7 +15,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Add", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				s.Add(i, j, a.At(i, j)/2.0)
@@ -28,7 +28,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Add up-down-up", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				s.Add(i, j, a.At(i, j)/2.0)
@@ -56,7 +56,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Add reverse", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 2; i >= 0; i-- {
 			for j := 2; j >= 0; j-- {
 				s.Add(i, j, a.At(i, j)/2.0)
@@ -69,7 +69,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Add random", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 2; i >= 0; i-- {
 			for j := 0; j < 3; j++ {
 				s.Add(i, j, a.At(i, j)/2.0)
@@ -82,7 +82,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Set", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				s.Set(i, j, a.At(i, j))
@@ -95,7 +95,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Set reverse", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 2; i >= 0; i-- {
 			for j := 2; j >= 0; j-- {
 				s.Set(i, j, a.At(i, j))
@@ -108,7 +108,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 	})
 
 	t.Run("Set random", func(t *testing.T) {
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		for i := 2; i >= 0; i-- {
 			for j := 0; j < 3; j++ {
 				s.Set(i, j, a.At(i, j))
@@ -122,7 +122,7 @@ func TestSparseSquareMatrix(t *testing.T) {
 
 	t.Run("Matrix with zero values", func(t *testing.T) {
 		a := mat.NewDense(3, 3, make([]float64, 9))
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		if !isSame(s, a) {
 			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
 		}
@@ -131,15 +131,32 @@ func TestSparseSquareMatrix(t *testing.T) {
 	t.Run("Sparse matrix", func(t *testing.T) {
 		a := mat.NewDense(3, 3, make([]float64, 9))
 		a.Set(1, 1, 42)
-		s := golis.NewSparseSquareMatrix(3)
+		s := golis.NewSparseMatrix(3, 3)
 		s.Set(1, 1, 42)
+		if !isSame(s, a) {
+			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+		}
+	})
+
+	t.Run("Rectange matrix", func(t *testing.T) {
+		a := mat.NewDense(3, 2, []float64{
+			8, 1, 6,
+			3, 5, 7,
+		})
+		s := golis.NewSparseMatrix(3, 2)
+		for i := 0; i < 3; i++ {
+			for j := 0; j < 2; j++ {
+				s.Set(i, j, a.At(i, j))
+				s.Set(i, j, a.At(i, j))
+			}
+		}
 		if !isSame(s, a) {
 			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
 		}
 	})
 }
 
-func isSame(s *golis.SparseSquareMatrix, a *mat.Dense) bool {
+func isSame(s *golis.SparseMatrix, a *mat.Dense) bool {
 	r, c := s.Dims()
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {
