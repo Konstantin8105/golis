@@ -10,6 +10,8 @@ type triple struct {
 	d        float64 // data
 }
 
+// TODO add research for finding limit size
+// TODO create garantee for memory = amount of non-zero element + size
 type SparseSquareMatrix struct {
 	size int // size of square matrix. Columns and rows is same
 	data struct {
