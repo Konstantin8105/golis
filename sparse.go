@@ -210,8 +210,8 @@ func (m *SparseMatrix) Dims() (r, c int) {
 // TODO: add function of matrix : get Min and Max absolute value for checking singular
 // TODO: need research of memory for operation Add
 
-// ParseSparseMatrix return sparse matrix parsed from byte slice in
-// MatrixMarket format or returns error
+// ParseSparseMatrix returns sparse matrix parsed from byte slice in
+// MatrixMarket format and error, if exist
 //
 // Example:
 //
