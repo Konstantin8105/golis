@@ -87,8 +87,6 @@ func Lsolve(A, b Matrix, option int) (
 		return
 	}
 
-	fmt.Println("Temp dir : ", tmpDir)
-
 	fn := func(name string) string {
 		return filepath.Join(tmpDir, string(filepath.Separator), name)
 	}
@@ -101,7 +99,6 @@ func Lsolve(A, b Matrix, option int) (
 	)
 
 	inp := convertMatrixWithVector(A, b)
-	fmt.Println("inp = ", string(inp))
 	err = ioutil.WriteFile(inputFilename, inp, 0644)
 	if err != nil {
 		return
@@ -128,12 +125,6 @@ func Lsolve(A, b Matrix, option int) (
 		return
 	}
 
-	// rhi, err := ioutil.ReadFile(rhistoryFilename)
-	// if err != nil {
-	// 	return
-	// }
-	// fmt.Println("rhi = ", string(rhi))
-	//
 	// TODO: rhistory
 
 	return
