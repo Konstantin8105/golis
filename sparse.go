@@ -174,6 +174,7 @@ func (m *SparseMatrix) compress() {
 	}
 }
 
+// TODO : add standart output for sparse matrix
 func (m *SparseMatrix) stringByColumn() string {
 	s := "\n"
 	for i := range m.data.ts {
