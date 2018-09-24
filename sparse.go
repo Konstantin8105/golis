@@ -1,6 +1,7 @@
 package golis
 
 import (
+	"fmt"
 	"math"
 	"sort"
 )
@@ -41,7 +42,6 @@ func (m *SparseSquareMatrix) At(r, c int) float64 {
 	index := sort.Search(len(m.data.ts), func(i int) bool {
 		return m.data.ts[i].position >= position
 	})
-
 	if index < len(m.data.ts) && m.data.ts[index].position == position {
 		return m.data.ts[index].d
 	}
@@ -113,16 +113,22 @@ func (m *SparseSquareMatrix) compress() {
 		if m.data.ts[i-1].position != m.data.ts[i].position {
 			continue
 		}
-		// triples element i-1 and i have same row and column
-		m.data.ts[i-1].d += m.data.ts[i].d // TODO: add float64 limit checking
-		m.data.ts[i].d = 0.0
+		nonZero := i - 1
+		for ; i < len(m.data.ts); i++ {
+			if m.data.ts[nonZero].position != m.data.ts[i].position {
+				break
+			}
+			// triples element i-1 and i have same row and column
+			m.data.ts[nonZero].d += m.data.ts[i].d // TODO: add float64 limit checking
+			m.data.ts[i].d = 0.0
+		}
 	}
 
 	// moving data for avoid elements with 0.0 values
 	var nonZeroPos int
 	for zeroPos := 0; zeroPos < len(m.data.ts); zeroPos++ {
 		// find position of zero value triple
-		if m.data.ts[zeroPos].d != 0.0 {
+		if math.Abs(m.data.ts[zeroPos].d) != 0.0 {
 			continue
 		}
 
@@ -131,8 +137,8 @@ func (m *SparseSquareMatrix) compress() {
 			nonZeroPos = zeroPos
 		}
 		for ; nonZeroPos < len(m.data.ts); nonZeroPos++ {
-			if m.data.ts[nonZeroPos].d == 0.0 {
-				continue
+			if math.Abs(m.data.ts[nonZeroPos].d) != 0.0 {
+				break
 			}
 		}
 		if nonZeroPos >= len(m.data.ts) {
@@ -146,13 +152,31 @@ func (m *SparseSquareMatrix) compress() {
 
 	// cut triple slice by nonzero elements
 	for i := len(m.data.ts) - 1; i >= 0; i-- {
-		if m.data.ts[i].d != 0.0 {
+		if math.Abs(m.data.ts[i].d) != 0.0 || i == 0 {
 			m.data.ts = m.data.ts[:i+1]
 			break
 		}
 	}
 
 	m.data.amountAdded = 0
+
+	// check result of compression
+	for i := 1; i < len(m.data.ts); i++ {
+		if m.data.ts[i-1].position != m.data.ts[i].position {
+			continue
+		}
+		// not correct compression
+		panic(fmt.Errorf("Not correct compresstion: same position\n%v", m.stringByColumn()))
+	}
+}
+
+func (m *SparseSquareMatrix) stringByColumn() string {
+	s := "\n"
+	for i := range m.data.ts {
+		s += fmt.Sprintf("%5d) %5d %10.9e\n",
+			i, m.data.ts[i].position, m.data.ts[i].d)
+	}
+	return s
 }
 
 // Add is alternative of pattern m.Set(r,c, someValue + m.At(r,c)).
