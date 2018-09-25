@@ -109,6 +109,7 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 		return
 	}
 
+	// prepare arguments for `lis`
 	args := []string{
 		inputFilename,
 		rhsSetting,
