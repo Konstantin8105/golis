@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -76,7 +77,7 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 // TODO: add description
 func Lsolve(A, b Matrix, rhsSetting, options string) (
 	solution Matrix,
-	rhistory Matrix,
+	rhistory []float64,
 	output string,
 	err error) {
 
@@ -135,9 +136,41 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 		return
 	}
 
-	// TODO: rhistory
+	// parsing rhistory
+	rhistory, err = parseRHistory(rhistoryFilename)
+	if err != nil {
+		return
+	}
 
 	// TODO: Read line "linear solver status  : normal end"
+
+	return
+}
+
+// parseRHistory parsing rhs history
+//
+// Example:
+//
+//	1.000000e+00
+//	0.000000e+00
+func parseRHistory(rh string) (r []float64, err error) {
+	b, err := ioutil.ReadFile(rh)
+	if err != nil {
+		return
+	}
+
+	lines := bytes.Split(b, []byte("\n"))
+	for i := range lines {
+		if len(lines[i]) == 0 {
+			continue
+		}
+		if s, err := strconv.ParseFloat(string(lines[i]), 64); err != nil {
+			err = fmt.Errorf("Cannot parse value `%v`: %v", string(lines[i]), err)
+			return nil, err
+		} else {
+			r = append(r, s)
+		}
+	}
 
 	return
 }
