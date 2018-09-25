@@ -23,7 +23,7 @@ func TestLsolve(t *testing.T) {
 		9.0,
 	})
 
-	s, r, o, err := golis.Lsolve(A, b, 0)
+	s, r, o, err := golis.Lsolve(A, b, "", "")
 	fmt.Println(s, r, o, err)
 }
 
@@ -37,7 +37,7 @@ func TestLsolveQuad(t *testing.T) {
 		2.0e-30,
 	})
 
-	s, r, o, err := golis.Lsolve(A, b, 0)
+	s, r, o, err := golis.Lsolve(A, b, "", "-f quad")
 	fmt.Println(s, r, o, err)
 	if err != nil {
 		t.Fatalf("Have error : %v", err)

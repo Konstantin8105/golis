@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 // Matrix interface is must comparable with gonum.mat.Matrix interface
@@ -73,11 +74,15 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 // solve : Ax=b, where A is matrix, b is vector
 // TODO: add "option" description
 // TODO: add description
-func Lsolve(A, b Matrix, option int) (
+func Lsolve(A, b Matrix, rhsSetting, options string) (
 	solution Matrix,
 	rhistory Matrix,
 	output string,
 	err error) {
+
+	if rhsSetting == "" {
+		rhsSetting = "0"
+	}
 
 	// TODO: add error tree
 
@@ -104,14 +109,16 @@ func Lsolve(A, b Matrix, option int) (
 		return
 	}
 
-	// TODO : specific folder for lis application
-	out, err := exec.Command("/home/lepricon/lis/bin/lsolve",
+	args := []string{
 		inputFilename,
-		fmt.Sprintf("%d", option),
+		rhsSetting,
 		solutionFilename,
 		rhistoryFilename,
-		"-f", "quad", // double-double (quadruple) precision
-	).Output()
+	}
+	args = append(args, strings.Split(options, " ")...)
+
+	// TODO : specific folder for lis application
+	out, err := exec.Command("/home/lepricon/lis/bin/lsolve", args...).Output()
 	if err != nil {
 		return
 	}
