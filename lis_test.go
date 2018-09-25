@@ -23,8 +23,8 @@ func TestLsolve(t *testing.T) {
 		9.0,
 	})
 
-	fmt.Println("A:", A)
-	fmt.Println("b:", b)
+	fmt.Printf("A:\n%5e\n", mat.Formatted(A))
+	fmt.Printf("b:\n%5e\n", mat.Formatted(b))
 	s, r, o, err := golis.Lsolve(A, b, "", "")
 	fmt.Println(s, r, o, err)
 }
@@ -32,16 +32,16 @@ func TestLsolve(t *testing.T) {
 func TestLsolveQuad(t *testing.T) {
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
-		1.e-30, 1e-30,
+		1.0e-10, 1.0e-10,
 	})
 	b := mat.NewDense(2, 1, []float64{
 		3.0,
-		2.0e-30,
+		2.0e-10,
 	})
 
-	fmt.Println("A:", A)
-	fmt.Println("b:", b)
-	s, r, o, err := golis.Lsolve(A, b, "", "-f quad -i cg")
+	fmt.Printf("A:\n%5e\n", mat.Formatted(A))
+	fmt.Printf("b:\n%5e\n", mat.Formatted(b))
+	s, r, o, err := golis.Lsolve(A, b, "", "-f quad")
 	fmt.Println(s, r, o, err)
 	if err != nil {
 		t.Fatalf("Have error : %v", err)
