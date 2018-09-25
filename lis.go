@@ -109,7 +109,9 @@ func Lsolve(A, b Matrix, option int) (
 		inputFilename,
 		fmt.Sprintf("%d", option),
 		solutionFilename,
-		rhistoryFilename).Output()
+		rhistoryFilename,
+		"-f", "quad", // double-double (quadruple) precision
+	).Output()
 	if err != nil {
 		return
 	}
@@ -126,6 +128,8 @@ func Lsolve(A, b Matrix, option int) (
 	}
 
 	// TODO: rhistory
+
+	// TODO: Read line "linear solver status  : normal end"
 
 	return
 }
