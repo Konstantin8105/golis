@@ -72,6 +72,11 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 	return buf.Bytes()
 }
 
+// Lsolse returns solution matrix of iterative solve for linear system.
+//
+//	A * x = b
+//
+// Where: A is matrix, b is right-hand vector.
 // solve : Ax=b, where A is matrix, b is vector
 // TODO: add "option" description
 // TODO: add description
@@ -80,6 +85,14 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 	rhistory []float64,
 	output string,
 	err error) {
+
+	// check size of input Matrixs
+	if r, c := A.Dims(); r != c {
+		err = fmt.Errorf("Matrix A is not square: [%d,%d]", r, c)
+	}
+	if r, c := b.Dims(); r != c {
+		err = fmt.Errorf("Vector b is not vertical vector: [%d,%d]", r, c)
+	}
 
 	if rhsSetting == "" {
 		rhsSetting = "0"
@@ -125,6 +138,7 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 		return
 	}
 
+	// TODO: Read line "linear solver status  : normal end"
 	output = string(out)
 
 	sol, err := ioutil.ReadFile(solutionFilename)
@@ -141,8 +155,6 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 	if err != nil {
 		return
 	}
-
-	// TODO: Read line "linear solver status  : normal end"
 
 	return
 }
