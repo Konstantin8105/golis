@@ -194,6 +194,9 @@ func (m *SparseMatrix) stringByColumn() string {
 func (m *SparseMatrix) Add(r, c int, value float64) {
 	m.check(r, c)
 	checkValue(value)
+	if math.Abs(value) == 0.0 { // no need addition zero value
+		return
+	}
 	position := int64(r) + int64(c)*int64(m.r) // calculate position
 	// TODO: append can multiply memory by 2 - it is not effective
 	m.data.ts = append(m.data.ts, triple{position: position, d: value})
