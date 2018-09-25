@@ -89,10 +89,10 @@ func checkValue(v float64) {
 func (m *SparseMatrix) check(r, c int) {
 	// TODO : add tree error panic
 	if r < 0 || r >= m.r {
-		panic("index out of range")
+		panic("index out of range for rows")
 	}
 	if c < 0 || c >= m.c {
-		panic("index out of range")
+		panic("index out of range for columns")
 	}
 }
 
@@ -156,12 +156,15 @@ func (m *SparseMatrix) compress() {
 		m.data.ts[nonZeroPos].d = 0.0
 	}
 
-	// cut triple slice by nonzero elements
-	for i := len(m.data.ts) - 1; i >= 0; i-- {
-		if math.Abs(m.data.ts[i].d) != 0.0 || i == 0 {
-			m.data.ts = m.data.ts[:i+1]
-			break
+	{
+		// cut triple slice by nonzero elements
+		var cut int
+		for cut = len(m.data.ts) - 1; cut >= 0; cut-- {
+			if math.Abs(m.data.ts[cut].d) != 0.0 {
+				break
+			}
 		}
+		m.data.ts = m.data.ts[:cut+1]
 	}
 
 	m.data.amountAdded = 0
@@ -197,8 +200,12 @@ func (m *SparseMatrix) String() string {
 					r, c, m.data.ts[pos].d)
 				pos++
 			}
+			if pos >= len(m.data.ts) {
+				goto end
+			}
 		}
 	}
+end:
 	return s
 }
 
@@ -258,7 +265,7 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 		return nil, err
 	} else {
 		v.r = int(s)
-		v.c = 0
+		v.c = 1
 	}
 
 	v.data.ts = make([]triple, 0, v.r)

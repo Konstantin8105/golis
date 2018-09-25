@@ -87,11 +87,20 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 	err error) {
 
 	// check size of input Matrixs
-	if r, c := A.Dims(); r != c {
+	if r, c := A.Dims(); r != c && r > 0 {
 		err = fmt.Errorf("Matrix A is not square: [%d,%d]", r, c)
+		return
 	}
-	if r, c := b.Dims(); r != c {
+	if r, c := b.Dims(); !(r > 0 && c == 1) {
 		err = fmt.Errorf("Vector b is not vertical vector: [%d,%d]", r, c)
+		return
+	}
+	{
+		r, _ := A.Dims()
+		if rb, _ := b.Dims(); r != rb {
+			err = fmt.Errorf("Amount of matrix and vector b is not same")
+			return
+		}
 	}
 
 	if rhsSetting == "" {
