@@ -172,19 +172,32 @@ func (m *SparseMatrix) compress() {
 			continue
 		}
 		// not correct compression
-		panic(fmt.Errorf("Not correct compresstion: same position\n%v", m.stringByColumn()))
+		panic(fmt.Errorf("Not correct compresstion: same position\n%s", m))
 	}
 }
 
 // TODO : add standart output for sparse matrix
 // TODO : add example
 // TODO : fmt.Formatted
-func (m *SparseMatrix) stringByColumn() string {
+func (m *SparseMatrix) String() string {
 	m.compress()
 	s := "\n"
-	for i := range m.data.ts {
-		s += fmt.Sprintf("%5d) %5d %10.9e\n",
-			i, m.data.ts[i].position, m.data.ts[i].d)
+	s += fmt.Sprintf("Amount of rows    : %5d\n", m.r)
+	s += fmt.Sprintf("Amount of columns : %5d\n", m.c)
+	s += fmt.Sprintf("%-6s %-6s %20s\n", "row", "column", "value")
+	if len(m.data.ts) == 0 {
+		return s
+	}
+	pos := 0
+	for c := 0; c < m.c; c++ {
+		for r := 0; r < m.r; r++ {
+			position := int64(r) + int64(c)*int64(m.r) // calculate position
+			if m.data.ts[pos].position == position {
+				s += fmt.Sprintf("%-6d %-6d %-20.15e\n",
+					r, c, m.data.ts[pos].d)
+				pos++
+			}
+		}
 	}
 	return s
 }

@@ -1,6 +1,7 @@
 package golis_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/Konstantin8105/golis"
@@ -23,7 +24,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -51,7 +52,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -64,7 +65,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -77,7 +78,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -90,7 +91,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -103,7 +104,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -116,7 +117,7 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -124,7 +125,7 @@ func TestSparseMatrix(t *testing.T) {
 		a := mat.NewDense(3, 3, make([]float64, 9))
 		s := golis.NewSparseMatrix(3, 3)
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
@@ -134,11 +135,11 @@ func TestSparseMatrix(t *testing.T) {
 		s := golis.NewSparseMatrix(3, 3)
 		s.Set(1, 1, 42)
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 
-	t.Run("Rectange matrix", func(t *testing.T) {
+	t.Run("Rectange horizontal matrix", func(t *testing.T) {
 		a := mat.NewDense(3, 2, []float64{
 			8, 1, 6,
 			3, 5, 7,
@@ -151,7 +152,25 @@ func TestSparseMatrix(t *testing.T) {
 			}
 		}
 		if !isSame(s, a) {
-			t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
+		}
+	})
+
+	t.Run("Rectange vertical matrix", func(t *testing.T) {
+		a := mat.NewDense(2, 3, []float64{
+			8, 1,
+			3, 5,
+			2, 6,
+		})
+		s := golis.NewSparseMatrix(2, 3)
+		for i := 0; i < 2; i++ {
+			for j := 0; j < 3; j++ {
+				s.Set(i, j, a.At(i, j))
+				s.Set(i, j, a.At(i, j))
+			}
+		}
+		if !isSame(s, a) {
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
 }
@@ -188,4 +207,24 @@ func TestParse(t *testing.T) {
 	if !isSame(s, a) {
 		t.Fatalf("Value is not same:\n%#v\n%#v", s, a)
 	}
+}
+
+func ExampleString() {
+	s := golis.NewSparseMatrix(3, 2)
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 2; j++ {
+			s.Set(i, j, float64(i+j*5))
+		}
+	}
+	fmt.Printf("%s", s)
+
+	// Output:
+	// Amount of rows    :     3
+	// Amount of columns :     2
+	// row    column                value
+	// 1      0      1.000000000000000e+00
+	// 2      0      2.000000000000000e+00
+	// 0      1      5.000000000000000e+00
+	// 1      1      6.000000000000000e+00
+	// 2      1      7.000000000000000e+00
 }
