@@ -14,6 +14,9 @@ import (
 )
 
 func TestLsolve(t *testing.T) {
+	// change location of lis software
+	golis.LisPath = "/home/lepricon/lis/bin/"
+
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		4.0, 1.0,
@@ -30,6 +33,9 @@ func TestLsolve(t *testing.T) {
 }
 
 func TestLsolveQuad(t *testing.T) {
+	// change location of lis software
+	golis.LisPath = "/home/lepricon/lis/bin/"
+
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		1.0e-10, 1.0e-10,

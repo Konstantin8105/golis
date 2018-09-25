@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+// LisPath is location of `lis` software.
+// For example :
+//	golis.LisPath = "/home/user/lis/bin/"
+var LisPath string
+
 // Matrix interface is must comparable with gonum.mat.Matrix interface
 type Matrix interface {
 	// Dims returns the dimensions of a Matrix.
@@ -141,8 +146,7 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 	}
 	args = append(args, strings.Split(options, " ")...)
 
-	// TODO : specific folder for lis application
-	out, err := exec.Command("/home/lepricon/lis/bin/lsolve", args...).Output()
+	out, err := exec.Command(filepath.Join(LisPath, "lsolve"), args...).Output()
 	if err != nil {
 		return
 	}
