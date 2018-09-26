@@ -244,7 +244,7 @@ func BenchmarkAt(b *testing.B) {
 			b.StartTimer()
 			for i := 0; i < b.N; i++ {
 				for j := 0; j < r; j++ {
-					_ = s.At(j, j)
+					_ = s.At(r/2, j)
 				}
 			}
 		})
