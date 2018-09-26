@@ -228,3 +228,25 @@ func ExampleString() {
 	// 1      1      6.000000000000000e+00
 	// 2      1      7.000000000000000e+00
 }
+
+func BenchmarkAt(b *testing.B) {
+	sizes := []int{10, 20, 40, 80}
+	for i := range sizes {
+		b.Run(fmt.Sprintf("%d", sizes[i]), func(b *testing.B) {
+			b.StopTimer()
+			s := golis.NewSparseMatrix(sizes[i], sizes[i])
+			r, c := s.Dims()
+			for i := 0; i < r; i++ {
+				for j := 0; j < c; j++ {
+					s.Set(i, j, float64(i+j*5))
+				}
+			}
+			b.StartTimer()
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < r; j++ {
+					_ = s.At(j, j)
+				}
+			}
+		})
+	}
+}
