@@ -15,6 +15,7 @@ type triple struct {
 
 // TODO add research for finding limit size
 // TODO create garantee for memory = amount of non-zero element + size
+// TODO use memory blocks for triples separate by size L2 cache
 type SparseMatrix struct {
 	r    int // amount of matrix rows
 	c    int // amount of matrix columns
