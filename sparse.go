@@ -47,8 +47,19 @@ func (m *SparseMatrix) At(r, c int) float64 {
 
 	// optimization of operation At
 	if m.data.amountAdded == 0 { // matrix is not changed
-		if m.atIndex.index > 0 && m.atIndex.position == position {
-			return m.data.ts[m.atIndex.index].d
+		if m.atIndex.index > 0 {
+			if m.atIndex.position == position {
+				return m.data.ts[m.atIndex.index].d
+			}
+			if position-m.atIndex.position == 1 {
+				if m.atIndex.index+1 < len(m.data.ts) {
+					if m.data.ts[m.atIndex.index+1].position == position {
+						m.atIndex.index += 1
+						m.atIndex.position = position
+						return m.data.ts[m.atIndex.index].d
+					}
+				}
+			}
 		}
 	}
 

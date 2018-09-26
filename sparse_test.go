@@ -239,14 +239,21 @@ func BenchmarkAt(b *testing.B) {
 				s.Set(i, j, float64(i+j*5))
 			}
 		}
-		b.Run(fmt.Sprintf("ByRow:%d", sizes[i]), func(b *testing.B) {
+		b.Run(fmt.Sprintf("ByRow   :%d", sizes[i]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				for j := 0; j < r; j++ {
 					_ = s.At(r/3, j)
 				}
 			}
 		})
-		b.Run(fmt.Sprintf("OneCell:%d", sizes[i]), func(b *testing.B) {
+		b.Run(fmt.Sprintf("ByColumn:%d", sizes[i]), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				for j := 0; j < r; j++ {
+					_ = s.At(j, c/3)
+				}
+			}
+		})
+		b.Run(fmt.Sprintf("OneCell :%d", sizes[i]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_ = s.At(r/3, r/3)
 			}
