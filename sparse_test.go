@@ -232,20 +232,23 @@ func ExampleString() {
 func BenchmarkAt(b *testing.B) {
 	sizes := []int{10, 20, 40, 80}
 	for i := range sizes {
-		b.Run(fmt.Sprintf("%d", sizes[i]), func(b *testing.B) {
-			b.StopTimer()
-			s := golis.NewSparseMatrix(sizes[i], sizes[i])
-			r, c := s.Dims()
-			for i := 0; i < r; i++ {
-				for j := 0; j < c; j++ {
-					s.Set(i, j, float64(i+j*5))
-				}
+		s := golis.NewSparseMatrix(sizes[i], sizes[i])
+		r, c := s.Dims()
+		for i := 0; i < r; i++ {
+			for j := 0; j < c; j++ {
+				s.Set(i, j, float64(i+j*5))
 			}
-			b.StartTimer()
+		}
+		b.Run(fmt.Sprintf("ByRow:%d", sizes[i]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				for j := 0; j < r; j++ {
-					_ = s.At(r/2, j)
+					_ = s.At(r/3, j)
 				}
+			}
+		})
+		b.Run(fmt.Sprintf("OneCell:%d", sizes[i]), func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				_ = s.At(r/3, r/3)
 			}
 		})
 	}
