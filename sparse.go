@@ -22,10 +22,6 @@ type SparseMatrix struct {
 		ts          []triple // non-zero value in matrix
 		amountAdded int      // amount unsorted of triples
 	}
-	atIndex struct {
-		position int64
-		index    int
-	}
 }
 
 // NewSparseMatrix return new sparse square matrix
@@ -41,41 +37,17 @@ func NewSparseMatrix(r, c int) *SparseMatrix {
 // It will panic if i or j are out of bounds for the matrix.
 func (m *SparseMatrix) At(r, c int) float64 {
 	m.check(r, c)
+	m.compress()
 
 	// calculate position
 	position := int64(r) + int64(c)*int64(m.r)
-
-	// optimization of operation At
-	if m.data.amountAdded == 0 { // matrix is not changed
-		if m.atIndex.index > 0 {
-			if m.atIndex.position == position {
-				return m.data.ts[m.atIndex.index].d
-			}
-			if position-m.atIndex.position == 1 {
-				if m.atIndex.index+1 < len(m.data.ts) {
-					if m.data.ts[m.atIndex.index+1].position == position {
-						m.atIndex.index += 1
-						m.atIndex.position = position
-						return m.data.ts[m.atIndex.index].d
-					}
-				}
-			}
-		}
-	}
-
-	m.compress()
 
 	// binary search of position
 	index := sort.Search(len(m.data.ts), func(i int) bool {
 		return m.data.ts[i].position >= position
 	})
 
-	// optimization operation At
-	m.atIndex.position = position
-	m.atIndex.index = -1
-
 	if index < len(m.data.ts) && m.data.ts[index].position == position {
-		m.atIndex.index = index
 		return m.data.ts[index].d
 	}
 

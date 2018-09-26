@@ -236,7 +236,11 @@ func BenchmarkAt(b *testing.B) {
 		r, c := s.Dims()
 		for i := 0; i < r; i++ {
 			for j := 0; j < c; j++ {
-				s.Set(i, j, float64(i+j*5))
+				if r/2-4 < i && i < r/2+4 {
+					if c/2-4 < j && j < c/2+4 {
+						s.Set(i, j, float64(i+j*5))
+					}
+				}
 			}
 		}
 		b.Run(fmt.Sprintf("ByRow   :%d", sizes[i]), func(b *testing.B) {
