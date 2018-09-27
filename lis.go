@@ -101,9 +101,14 @@ var errorStrings = []string{
 //	A * x = b
 //
 // Where: A is matrix, b is right-hand vector.
-// solve : Ax=b, where A is matrix, b is vector
-// TODO: add "option" description
-// TODO: add description
+//
+// Description of rhsSetting and options, see in `lis` software documentation.
+// Some examples:
+//	rhsSetting = "0"                   , Use the right-hand side vector b
+//	rhsSetting = "1"                   , Use b = (1, . . . , 1)^T
+//	options    = "-f quad"             , Use quadriple precision
+//	options    = "-i gmres -restart 20", Use solver GMRES with restart 20
+//
 func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
 	solution mat.Matrix,
 	rhistory []float64,
