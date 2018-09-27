@@ -18,10 +18,11 @@ type triple struct {
 	d        float64 // data
 }
 
-// SparseMatrix is struct of sparse matrix
 // TODO add research for finding limit size
 // TODO create guarantee for memory = amount of non-zero element + size
 // TODO use memory blocks for triples separate by size L2 cache
+
+// SparseMatrix is struct of sparse matrix
 type SparseMatrix struct {
 	r    int // amount of matrix rows
 	c    int // amount of matrix columns
@@ -191,8 +192,9 @@ func (m *SparseMatrix) compress() {
 	}
 }
 
-// String return standard golis string of sparse matrix
 // TODO : fmt.Formatted
+
+// String return standard golis string of sparse matrix
 func (m *SparseMatrix) String() string {
 	m.compress()
 	s := "\n"
