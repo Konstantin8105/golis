@@ -15,4 +15,3 @@ git clone https://github.com/anishida/lis.git
 make install
 ```
 
-// TODO add instal lis in travis
