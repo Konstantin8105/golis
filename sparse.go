@@ -186,6 +186,7 @@ func (m *SparseMatrix) compress() {
 	}
 }
 
+// String return standard golis string of sparse matrix
 // TODO : fmt.Formatted
 func (m *SparseMatrix) String() string {
 	m.compress()

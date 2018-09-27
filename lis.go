@@ -88,7 +88,6 @@ func (g ErrorValue) Error() string {
 
 // Constants of error values 'lis' software
 const (
-	// "LIS_SUCCESS", // all is ok
 	IllOption ErrorValue = iota
 	Breakdown
 	OutOfMemory
@@ -98,7 +97,6 @@ const (
 )
 
 var errorStrings = []string{
-	// "LIS_SUCCESS", // all is ok
 	"LIS_ILL_OPTION",
 	"LIS_BREAKDOWN",
 	"LIS_OUT_OF_MEMORY",
