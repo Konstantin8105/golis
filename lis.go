@@ -102,7 +102,8 @@ var errorStrings = []string{
 	"LIS_OUT_OF_MEMORY",
 	"LIS_MAXITER",
 	"LIS_NOT_IMPLEMENTED",
-	"LIS_ERR_FILE_IO"}
+	"LIS_ERR_FILE_IO",
+}
 
 // Lsolve returns solution matrix of iterative solve for linear system.
 //
