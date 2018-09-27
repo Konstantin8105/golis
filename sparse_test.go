@@ -174,9 +174,29 @@ func TestSparseMatrix(t *testing.T) {
 			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
 		}
 	})
+
+	t.Run("Transpose", func(t *testing.T) {
+		a := mat.NewDense(2, 3, []float64{
+			8, 1,
+			3, 5,
+			2, 6,
+		})
+		s := golis.NewSparseMatrix(2, 3)
+		for i := 0; i < 2; i++ {
+			for j := 0; j < 3; j++ {
+				s.Set(i, j, a.At(i, j))
+				s.Set(i, j, a.At(i, j))
+			}
+		}
+		st := s.T()
+		stt := st.T()
+		if !isSame(stt, a) {
+			t.Fatalf("Value is not same:\n%s\n%#v", stt, a)
+		}
+	})
 }
 
-func isSame(s *golis.SparseMatrix, a *mat.Dense) bool {
+func isSame(s mat.Matrix, a mat.Matrix) bool {
 	r, c := s.Dims()
 	for i := 0; i < r; i++ {
 		for j := 0; j < c; j++ {

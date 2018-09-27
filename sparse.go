@@ -6,7 +6,12 @@ import (
 	"math"
 	"sort"
 	"strconv"
+
+	"gonum.org/v1/gonum/mat"
 )
+
+// guarantee SparseMatrix have interface of gonum.mat.Matrix
+var _ mat.Matrix = (*SparseMatrix)(nil)
 
 type triple struct {
 	position int64   // position matrix element (row + column * size)
@@ -234,6 +239,34 @@ func (m *SparseMatrix) Add(r, c int, value float64) {
 	if m.data.amountAdded > max {
 		m.compress()
 	}
+}
+
+// T returns the transpose of the Matrix. Whether T returns a copy of the
+// underlying data is implementation dependent.
+// This method may be implemented using the Transpose type, which
+// provides an implicit matrix transpose.
+func (m *SparseMatrix) T() mat.Matrix {
+	out := new(SparseMatrix)
+	out.r = m.c
+	out.c = m.r
+	out.data.ts = make([]triple, 0, len(m.data.ts))
+	pos := 0
+	for c := 0; c < m.c; c++ {
+		for r := 0; r < m.r; r++ {
+			position := int64(r) + int64(c)*int64(m.r) // calculate position
+			if m.data.ts[pos].position == position {
+				out.Add(c, r, m.data.ts[pos].d)
+				pos++
+			}
+			if pos >= len(m.data.ts) {
+				goto end
+			}
+		}
+	}
+end:
+	out.data.amountAdded = -1
+	out.compress()
+	return out
 }
 
 // Dims returns the dimensions of a Matrix.
