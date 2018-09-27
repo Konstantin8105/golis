@@ -104,10 +104,11 @@ var errorStrings = []string{
 //
 // Description of rhsSetting and options, see in `lis` software documentation.
 // Some examples:
-//	rhsSetting = "0"                   , Use the right-hand side vector b
-//	rhsSetting = "1"                   , Use b = (1, . . . , 1)^T
-//	options    = "-f quad"             , Use quadriple precision
-//	options    = "-i gmres -restart 20", Use solver GMRES with restart 20
+//	rhsSetting = "0"                          , Use the right-hand side vector b
+//	rhsSetting = "1"                          , Use b = (1, . . . , 1)^T
+//	options    = "-f quad"                    , Use quadriple precision
+//	options    = "-i gmres -restart 20"       , Use solver GMRES with restart 20
+//	options    = "-i bicgstab -maxiter 20000" , Use solver BiCGSTAB with max iteration 20000
 //
 func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
 	solution mat.Matrix,
