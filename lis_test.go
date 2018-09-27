@@ -157,7 +157,7 @@ func TestLsolveOptions(t *testing.T) {
 		t.Run(fmt.Sprintf("Option%s", opt), func(t *testing.T) {
 			s, _, _, err := golis.Lsolve(A, b, "", opt)
 			if err != nil {
-				t.Logf("Not correct result: %v", err)
+				t.Log(err)
 				return
 			}
 

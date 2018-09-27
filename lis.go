@@ -154,6 +154,7 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 	// Result parsing:
 	// linear solver status  : normal end
 	// linear solver status  : LIS_BREAKDOWN(code=2)
+	// TODO : add error type for that error
 	errorStrings := []string{
 		// "LIS_SUCCESS", // all is ok
 		"LIS_ILL_OPTION",
