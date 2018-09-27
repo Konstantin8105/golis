@@ -181,7 +181,6 @@ func (m *SparseMatrix) compress() {
 	}
 }
 
-// TODO : add standart output for sparse matrix
 // TODO : add example
 // TODO : fmt.Formatted
 func (m *SparseMatrix) String() string {
