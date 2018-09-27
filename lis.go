@@ -8,23 +8,14 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"gonum.org/v1/gonum/mat"
 )
 
 // LisPath is location of `lis` software.
 // For example :
 //	golis.LisPath = "/home/user/lis/bin/"
 var LisPath string
-
-// Matrix interface is must comparable with gonum.mat.Matrix interface
-type Matrix interface {
-	// Dims returns the dimensions of a Matrix.
-	// Where: r - amount of rows, c - amount of columns.
-	Dims() (r, c int)
-
-	// At returns the value of a matrix element at row i, column j.
-	// It will panic if i or j are out of bounds for the matrix.
-	At(i, j int) float64
-}
 
 // convertMatrixWithVector - convert matrix and vector to byte slice in
 // Matrix Market format
@@ -36,7 +27,7 @@ type Matrix interface {
 // Type of output data : matrix with vector
 // Type of values      : real
 // Type of matrix      : general
-func convertMatrixWithVector(A, b Matrix) []byte {
+func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	var buf bytes.Buffer
 
 	buf.WriteString("%%MatrixMarket matrix coordinate real general\n")
@@ -113,8 +104,8 @@ var errorStrings = []string{
 // solve : Ax=b, where A is matrix, b is vector
 // TODO: add "option" description
 // TODO: add description
-func Lsolve(A, b Matrix, rhsSetting, options string) (
-	solution Matrix,
+func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
+	solution mat.Matrix,
 	rhistory []float64,
 	output string,
 	err error) {
