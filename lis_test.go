@@ -9,12 +9,7 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-var lisPath string = "/home/konstantin/lis/bin/"
-
 func TestLsolve(t *testing.T) {
-	// change location of lis software
-	golis.LisPath = lisPath
-
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		4.0, 1.0,
@@ -26,7 +21,7 @@ func TestLsolve(t *testing.T) {
 
 	s, _, _, err := golis.Lsolve(A, b, "", "")
 	if err != nil {
-		t.Errorf("Not correct result: %v", err)
+		t.Fatalf("Not correct result: %v", err)
 	}
 
 	if math.Abs(s.At(0, 0)-2) >= 1e-10 {
@@ -38,9 +33,6 @@ func TestLsolve(t *testing.T) {
 }
 
 func TestLsolveQuad(t *testing.T) {
-	// change location of lis software
-	golis.LisPath = lisPath
-
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		1.0e-10, 1.0e-10,
@@ -52,7 +44,7 @@ func TestLsolveQuad(t *testing.T) {
 
 	s, _, _, err := golis.Lsolve(A, b, "", "-f quad")
 	if err != nil {
-		t.Errorf("Not correct result: %v", err)
+		t.Fatalf("Not correct result: %v", err)
 	}
 
 	if math.Abs(s.At(0, 0)-1) >= 1e-10 {
@@ -64,9 +56,6 @@ func TestLsolveQuad(t *testing.T) {
 }
 
 func TestLsolveOptions(t *testing.T) {
-	// change location of lis software
-	golis.LisPath = lisPath
-
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
 		4.0, 1.0,
@@ -167,9 +156,6 @@ func TestLsolveOptions(t *testing.T) {
 }
 
 func TestLsolveFail(t *testing.T) {
-	// change location of lis software
-	golis.LisPath = lisPath
-
 	tcs := []struct {
 		a, b []float64
 	}{
