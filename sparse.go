@@ -181,7 +181,6 @@ func (m *SparseMatrix) compress() {
 	}
 }
 
-// TODO : add example
 // TODO : fmt.Formatted
 func (m *SparseMatrix) String() string {
 	m.compress()
