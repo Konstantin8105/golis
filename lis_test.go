@@ -122,6 +122,35 @@ func TestLsolveOptions(t *testing.T) {
 		"-i minres",               // MINRES
 		"-i cocg",                 // COCG
 		"-i cocr",                 // COCR
+
+		// Solver with Preconditioners
+		"-i bicrstab -p none",                       // none
+		"-i bicrstab -p jacobi",                     // Jacobi
+		"-i bicrstab -p ilu",                        // ILU(k)
+		"-i bicrstab -p ilu -ilu_fill 0",            // ILU(k)
+		"-i bicrstab -p ssor",                       // SSOR
+		"-i bicrstab -p ssor -ssor_omega 1.5",       // SSOR
+		"-i bicrstab -p hybrid",                     // Hybrid
+		"-i bicrstab -p hybrid -hybrid_i bicg",      // Hybrid
+		"-i bicrstab -p hybrid -hybrid_maxiter 20",  // Hybrid
+		"-i bicrstab -p hybrid -hybrid_tol  1e-4",   // Hybrid
+		"-i bicrstab -p hybrid -hybrid_omega  1.4",  // Hybrid
+		"-i bicrstab -p hybrid -hybrid_ell 2 ",      // Hybrid
+		"-i bicrstab -p hybrid -hybrid_restart 30 ", // Hybrid
+		"-i bicrstab -p is",                         // I+S
+		"-i bicrstab -p is -is_alpha 1.0",           // I+S
+		"-i bicrstab -p is -is_m 3",                 // I+S
+		"-i bicrstab -p sainv",                      // SAINV
+		"-i bicrstab -p sainv -sainv_drop 0.05",     // SAINV
+		"-i bicrstab -p saamg",                      // SA-AMG
+		"-i bicrstab -p saamg -saamg_unsym false",   // SA-AMG
+		"-i bicrstab -p saamg -saamg_theta 0.05",    // SA-AMG
+		"-i bicrstab -p iluc",                       // Crout ILU
+		"-i bicrstab -p iluc -iluc_drop 0.05",       // Crout ILU
+		"-i bicrstab -p iluc -iluc_rate 5.0",        // Crout ILU
+		"-i bicrstab -p ilut",                       // ILUT
+		"-i bicrstab -adds true",                    // Additive Schwarz
+		"-i bicrstab -adds true -adds_iter 1",       // Additive Schwarz
 	}
 
 	for _, opt := range options {
