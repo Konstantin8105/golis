@@ -294,6 +294,7 @@ func (m *SparseMatrix) Dims() (r, c int) {
 //
 func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 
+	// TODO add optimization for SparseMatrix
 	v = new(SparseMatrix)
 
 	lines := bytes.Split(b, []byte("\n"))

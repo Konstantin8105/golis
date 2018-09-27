@@ -28,6 +28,7 @@ var LisPath string
 // Type of values      : real
 // Type of matrix      : general
 func convertMatrixWithVector(A, b mat.Matrix) []byte {
+	// TODO : add to specific package mmatrix
 	var buf bytes.Buffer
 
 	buf.WriteString("%%MatrixMarket matrix coordinate real general\n")
@@ -53,6 +54,7 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	buf.WriteString(fmt.Sprintf("%d %d %d 1 0\n", rA, cA, nonZeros))
 
 	// write matrix A
+	// TODO add optimization for SparseMatrix
 	for i := 0; i < rA; i++ {
 		for j := 0; j < cA; j++ {
 			if A.At(i, j) != 0.0 {

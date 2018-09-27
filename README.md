@@ -14,3 +14,5 @@ git clone https://github.com/anishida/lis.git
 ./configure --prefix=/home/lepricon/lis --enable-quad
 make install
 ```
+
+// TODO add instal lis in travis
