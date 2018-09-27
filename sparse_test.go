@@ -2,6 +2,7 @@ package golis_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/Konstantin8105/golis"
@@ -216,7 +217,7 @@ func ExampleString() {
 			s.Set(i, j, float64(i+j*5))
 		}
 	}
-	fmt.Printf("%s", s)
+	fmt.Fprintf(os.Stdout, "%s", s)
 
 	// Output:
 	// Amount of rows    :     3

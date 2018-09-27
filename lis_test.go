@@ -114,8 +114,7 @@ func TestLsolveFail(t *testing.T) {
 			A := mat.NewDense(2, 2, tc.a)
 			B := mat.NewDense(2, 1, tc.b)
 
-			_, _, o, err := golis.Lsolve(A, B, "", "")
-			fmt.Println(o, err)
+			_, _, _, err := golis.Lsolve(A, B, "", "")
 			if err == nil {
 				t.Fatalf("Haven`t error : %v", err)
 			}
