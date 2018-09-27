@@ -246,6 +246,7 @@ func (m *SparseMatrix) Add(r, c int, value float64) {
 // This method may be implemented using the Transpose type, which
 // provides an implicit matrix transpose.
 func (m *SparseMatrix) T() mat.Matrix {
+	m.compress()
 	out := new(SparseMatrix)
 	out.r = m.c
 	out.c = m.r
