@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,9 +14,11 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
+var lisPath string = "/home/konstantin/lis/bin/"
+
 func TestLsolve(t *testing.T) {
 	// change location of lis software
-	golis.LisPath = "/home/lepricon/lis/bin/"
+	golis.LisPath = lisPath
 
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
@@ -26,15 +29,22 @@ func TestLsolve(t *testing.T) {
 		9.0,
 	})
 
-	fmt.Printf("A:\n%5e\n", mat.Formatted(A))
-	fmt.Printf("b:\n%5e\n", mat.Formatted(b))
-	s, r, o, err := golis.Lsolve(A, b, "", "")
-	fmt.Println(s, r, o, err)
+	s, _, _, err := golis.Lsolve(A, b, "", "")
+	if err != nil {
+		t.Errorf("Not correct result: %v", err)
+	}
+
+	if math.Abs(s.At(0, 0)-2) >= 1e-10 {
+		t.Errorf("Element 0,0 is not correct : %v", s.At(0, 0))
+	}
+	if math.Abs(s.At(1, 0)-1) >= 1e-10 {
+		t.Errorf("Element 1,0 is not correct : %v", s.At(1, 0))
+	}
 }
 
 func TestLsolveQuad(t *testing.T) {
 	// change location of lis software
-	golis.LisPath = "/home/lepricon/lis/bin/"
+	golis.LisPath = lisPath
 
 	A := mat.NewDense(2, 2, []float64{
 		1.0, 2.0,
@@ -45,12 +55,71 @@ func TestLsolveQuad(t *testing.T) {
 		2.0e-10,
 	})
 
-	fmt.Printf("A:\n%5e\n", mat.Formatted(A))
-	fmt.Printf("b:\n%5e\n", mat.Formatted(b))
-	s, r, o, err := golis.Lsolve(A, b, "", "-f quad")
-	fmt.Println(s, r, o, err)
+	s, _, _, err := golis.Lsolve(A, b, "", "-f quad")
 	if err != nil {
-		t.Fatalf("Have error : %v", err)
+		t.Errorf("Not correct result: %v", err)
+	}
+
+	if math.Abs(s.At(0, 0)-1) >= 1e-10 {
+		t.Errorf("Element 0,0 is not correct : %v", s.At(0, 0))
+	}
+	if math.Abs(s.At(1, 0)-1) >= 1e-10 {
+		t.Errorf("Element 1,0 is not correct : %v", s.At(1, 0))
+	}
+}
+
+func TestLsolveFail(t *testing.T) {
+	// change location of lis software
+	golis.LisPath = lisPath
+
+	tcs := []struct {
+		a, b []float64
+	}{
+		// TODO: need internal checking
+		// {
+		// 	a: []float64{
+		// 		1.0, 2.0,
+		// 		0.0, 0.0,
+		// 	},
+		// 	b: []float64{
+		// 		3.0,
+		// 		0.0,
+		// 	},
+		// },
+		// TODO: need internal checking
+		// {
+		// 	a: []float64{
+		// 		1.0, 2.0,
+		// 		1.0e-30, 1.0e-30,
+		// 	},
+		// 	b: []float64{
+		// 		3.0,
+		// 		2.0e-30,
+		// 	},
+		// },
+		{
+			a: []float64{
+				1.0, 0.0,
+				1.0, 0.0,
+			},
+			b: []float64{
+				3.0,
+				1.0,
+			},
+		},
+	}
+
+	for i, tc := range tcs {
+		t.Run(fmt.Sprintf("Fail%d", i), func(t *testing.T) {
+			A := mat.NewDense(2, 2, tc.a)
+			B := mat.NewDense(2, 1, tc.b)
+
+			_, _, o, err := golis.Lsolve(A, B, "", "")
+			fmt.Println(o, err)
+			if err == nil {
+				t.Fatalf("Haven`t error : %v", err)
+			}
+		})
 	}
 }
 

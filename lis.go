@@ -151,7 +151,24 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 		return
 	}
 
-	// TODO: Read line "linear solver status  : normal end"
+	// Result parsing:
+	// linear solver status  : normal end
+	// linear solver status  : LIS_BREAKDOWN(code=2)
+	errorStrings := []string{
+		// "LIS_SUCCESS", // all is ok
+		"LIS_ILL_OPTION",
+		"LIS_BREAKDOWN",
+		"LIS_OUT_OF_MEMORY",
+		"LIS_MAXITER",
+		"LIS_NOT_IMPLEMENTED",
+		"LIS_ERR_FILE_IO"}
+	for _, e := range errorStrings {
+		if bytes.Contains(out, []byte(e)) {
+			err = fmt.Errorf("Error of lis software : %s", e)
+			return
+		}
+	}
+
 	output = string(out)
 
 	sol, err := ioutil.ReadFile(solutionFilename)
