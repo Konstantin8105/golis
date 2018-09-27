@@ -232,8 +232,8 @@ func ExampleString() {
 
 func BenchmarkAt(b *testing.B) {
 	sizes := []int{10, 20, 40, 80}
-	for i := range sizes {
-		s := golis.NewSparseMatrix(sizes[i], sizes[i])
+	for is := range sizes {
+		s := golis.NewSparseMatrix(sizes[is], sizes[is])
 		r, c := s.Dims()
 		for i := 0; i < r; i++ {
 			for j := 0; j < c; j++ {
@@ -244,21 +244,21 @@ func BenchmarkAt(b *testing.B) {
 				}
 			}
 		}
-		b.Run(fmt.Sprintf("ByRow   :%d", sizes[i]), func(b *testing.B) {
+		b.Run(fmt.Sprintf("ByRow   :%d", sizes[is]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				for j := 0; j < r; j++ {
 					_ = s.At(r/3, j)
 				}
 			}
 		})
-		b.Run(fmt.Sprintf("ByColumn:%d", sizes[i]), func(b *testing.B) {
+		b.Run(fmt.Sprintf("ByColumn:%d", sizes[is]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				for j := 0; j < r; j++ {
 					_ = s.At(j, c/3)
 				}
 			}
 		})
-		b.Run(fmt.Sprintf("OneCell :%d", sizes[i]), func(b *testing.B) {
+		b.Run(fmt.Sprintf("OneCell :%d", sizes[is]), func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				_ = s.At(r/3, r/3)
 			}
