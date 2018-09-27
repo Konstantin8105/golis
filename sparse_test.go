@@ -140,7 +140,7 @@ func TestSparseMatrix(t *testing.T) {
 		}
 	})
 
-	t.Run("Rectange horizontal matrix", func(t *testing.T) {
+	t.Run("Rectangle horizontal matrix", func(t *testing.T) {
 		a := mat.NewDense(3, 2, []float64{
 			8, 1, 6,
 			3, 5, 7,
@@ -157,7 +157,7 @@ func TestSparseMatrix(t *testing.T) {
 		}
 	})
 
-	t.Run("Rectange vertical matrix", func(t *testing.T) {
+	t.Run("Rectangle vertical matrix", func(t *testing.T) {
 		a := mat.NewDense(2, 3, []float64{
 			8, 1,
 			3, 5,
@@ -210,7 +210,7 @@ func TestParse(t *testing.T) {
 	}
 }
 
-func ExampleString() {
+func ExampleSparseMatrix() {
 	s := golis.NewSparseMatrix(3, 2)
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 2; j++ {

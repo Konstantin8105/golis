@@ -15,7 +15,7 @@ type triple struct {
 
 // SparseMatrix is struct of sparse matrix
 // TODO add research for finding limit size
-// TODO create garantee for memory = amount of non-zero element + size
+// TODO create guarantee for memory = amount of non-zero element + size
 // TODO use memory blocks for triples separate by size L2 cache
 type SparseMatrix struct {
 	r    int // amount of matrix rows
@@ -56,6 +56,9 @@ func (m *SparseMatrix) At(r, c int) float64 {
 	return 0.0
 }
 
+// Set set value in sparse matrix by address [r,c].
+// If r,c outside of matrix, then create a panic.
+// If value is not valid, then create panic.
 func (m *SparseMatrix) Set(r, c int, value float64) {
 	m.check(r, c)
 	checkValue(value)
@@ -262,13 +265,13 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 	// TODO: check real
 
 	// convert size of vector
-	if s, err := strconv.ParseInt(string(lines[1]), 10, 64); err != nil {
+	s, err := strconv.ParseInt(string(lines[1]), 10, 64)
+	if err != nil {
 		err = fmt.Errorf("Cannot parse size `%v`: %v", string(lines[1]), err)
 		return nil, err
-	} else {
-		v.r = int(s)
-		v.c = 1
 	}
+	v.r = int(s)
+	v.c = 1
 
 	v.data.ts = make([]triple, 0, v.r)
 
@@ -283,23 +286,24 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 		pars := bytes.Split(lines[i], []byte(" "))
 		var t triple
 		// parse index
-		if s, err := strconv.ParseInt(string(pars[0]), 10, 64); err != nil {
+		s, err := strconv.ParseInt(string(pars[0]), 10, 64)
+		if err != nil {
 			err = fmt.Errorf("Cannot parse index `%v`: %v", string(pars[0]), err)
 			return nil, err
-		} else {
-			t.position = s - 1 // in MatrixMarket index from 1, but not zero
 		}
+		t.position = s - 1 // in MatrixMarket index from 1, but not zero
+
 		// parse value
 		for pos := 1; pos < len(pars); pos++ {
 			if len(pars[pos]) == 0 {
 				continue
 			}
-			if s, err := strconv.ParseFloat(string(pars[pos]), 64); err != nil {
+			s, err := strconv.ParseFloat(string(pars[pos]), 64)
+			if err != nil {
 				err = fmt.Errorf("Cannot parse value `%v`: %v", string(pars[pos]), err)
 				return nil, err
-			} else {
-				t.d = s
 			}
+			t.d = s
 		}
 		v.data.ts = append(v.data.ts, t)
 	}

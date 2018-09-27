@@ -240,7 +240,7 @@ func TestTodo(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer file.Close()
+			defer func() { _ = file.Close() }()
 
 			pos := 0
 			scanner := bufio.NewScanner(file)
@@ -283,7 +283,7 @@ func TestFmt(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer file.Close()
+			defer func() { _ = file.Close() }()
 
 			pos := 1
 			scanner := bufio.NewScanner(file)
@@ -324,7 +324,7 @@ func TestDebug(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer file.Close()
+			defer func() { _ = file.Close() }()
 
 			pos := 1
 			scanner := bufio.NewScanner(file)

@@ -106,7 +106,7 @@ var errorStrings = []string{
 	"LIS_NOT_IMPLEMENTED",
 	"LIS_ERR_FILE_IO"}
 
-// Lsolse returns solution matrix of iterative solve for linear system.
+// Lsolve returns solution matrix of iterative solve for linear system.
 //
 //	A * x = b
 //
@@ -228,12 +228,12 @@ func parseRHistory(rh string) (r []float64, err error) {
 		if len(lines[i]) == 0 {
 			continue
 		}
-		if s, err := strconv.ParseFloat(string(lines[i]), 64); err != nil {
+		s, err := strconv.ParseFloat(string(lines[i]), 64)
+		if err != nil {
 			err = fmt.Errorf("Cannot parse value `%v`: %v", string(lines[i]), err)
 			return nil, err
-		} else {
-			r = append(r, s)
 		}
+		r = append(r, s)
 	}
 
 	return
