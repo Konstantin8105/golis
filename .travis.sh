@@ -9,3 +9,5 @@ cd lis
 ./configure --enable-quad
 
 make install
+
+cd ..
