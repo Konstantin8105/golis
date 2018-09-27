@@ -77,9 +77,9 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 	return buf.Bytes()
 }
 
-type GolisErrorValue int
+type ErrorValue int
 
-func (g GolisErrorValue) Error() string {
+func (g ErrorValue) Error() string {
 	return fmt.Sprintf(
 		"Error of `lis` software error: %s",
 		errorStrings[int(g)])
@@ -87,7 +87,7 @@ func (g GolisErrorValue) Error() string {
 
 const (
 	// "LIS_SUCCESS", // all is ok
-	LisIllOption GolisErrorValue = iota
+	LisIllOption ErrorValue = iota
 	LisBreakdown
 	LisOutOfMemory
 	LisMaxiter
@@ -175,15 +175,16 @@ func Lsolve(A, b Matrix, rhsSetting, options string) (
 
 	out, err := exec.Command(filepath.Join(LisPath, "lsolve"), args...).Output()
 	if err != nil {
+		err = fmt.Errorf("Error result of execute `lsolve`: %v", err)
 		return
 	}
 
-	// Result parsing:
+	// Example of result parsing:
 	// linear solver status  : normal end
 	// linear solver status  : LIS_BREAKDOWN(code=2)
 	for i, e := range errorStrings {
 		if bytes.Contains(out, []byte(e)) {
-			err = GolisErrorValue(i)
+			err = ErrorValue(i)
 			return
 		}
 	}
