@@ -77,6 +77,7 @@ func convertMatrixWithVector(A, b Matrix) []byte {
 	return buf.Bytes()
 }
 
+// ErrorValue is error retirn value as result of `lis` software working
 type ErrorValue int
 
 func (g ErrorValue) Error() string {
