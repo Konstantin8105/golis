@@ -177,7 +177,8 @@ func (m *SparseMatrix) compress() {
 			continue
 		}
 		// not correct compression
-		panic(fmt.Errorf("Not correct compresstion: same position\n%s", m))
+		panic(fmt.Errorf("Not correct compresstion: same position\n%s",
+			m.String()))
 	}
 }
 

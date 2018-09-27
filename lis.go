@@ -85,14 +85,15 @@ func (g ErrorValue) Error() string {
 		errorStrings[int(g)])
 }
 
+// Constants of error values 'lis' software
 const (
 	// "LIS_SUCCESS", // all is ok
-	LisIllOption ErrorValue = iota
-	LisBreakdown
-	LisOutOfMemory
-	LisMaxiter
-	LisNotImplemented
-	LisErrFileIO
+	IllOption ErrorValue = iota
+	Breakdown
+	OutOfMemory
+	Maxiter
+	NotImplemented
+	ErrFileIO
 )
 
 var errorStrings = []string{
