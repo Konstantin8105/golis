@@ -13,6 +13,7 @@ type triple struct {
 	d        float64 // data
 }
 
+// SparseMatrix is struct of sparse matrix
 // TODO add research for finding limit size
 // TODO create garantee for memory = amount of non-zero element + size
 // TODO use memory blocks for triples separate by size L2 cache
