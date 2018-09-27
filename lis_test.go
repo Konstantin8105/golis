@@ -68,6 +68,80 @@ func TestLsolveQuad(t *testing.T) {
 	}
 }
 
+func TestLsolveOptions(t *testing.T) {
+	// change location of lis software
+	golis.LisPath = lisPath
+
+	A := mat.NewDense(2, 2, []float64{
+		1.0, 2.0,
+		4.0, 1.0,
+	})
+	b := mat.NewDense(2, 1, []float64{
+		4.0,
+		9.0,
+	})
+
+	options := []string{
+		// Empty
+		"",
+
+		// Quadriple precision
+		"-f quad",
+
+		// Solvers
+		"-i cg",                   // CG solver
+		"-i cg -maxiter 20000",    // CG solver
+		"-i bicg",                 // BiCG solver
+		"-i cgs",                  // CGS
+		"-i bicgstab",             // BiCGSTAB
+		"-i bicgstabl",            // BiCGSTAB(l)
+		"-i bicgstabl -ell 2",     // BiCGSTAB(l)
+		"-i bicgstabl -ell 3",     // BiCGSTAB(l)
+		"-i gpbicg",               // GPBiCG
+		"-i tfqmr",                // TFQMR
+		"-i orthomin",             // Orthomin(m)
+		"-i orthomin -restart 20", // Orthomin(m)
+		"-i gmres",                // GMRES
+		"-i gmres -restart 20",    // GMRES
+		"-i jacobi",               // Jacobi
+		"-i gs",                   // Gauss-Seidel
+		"-i sor",                  // SOR
+		"-i sor -omega 1.5",       // SOR
+		"-i bicgsafe",             // BiCGSafe
+		"-i cr",                   // CR
+		"-i bicr",                 // BiCR
+		"-i crs",                  // CRS
+		"-i bicrstab",             // BiCRSTAB
+		"-i gpbicr",               // GPBiCR
+		"-i bicrsafe",             // BiCRSafe
+		"-i fgmres",               // FGMRES(m)
+		"-i fgmres -restart 30",   // FGMRES(m)
+		"-i idrs",                 // IDR(s)
+		"-i idrs -irestart 2",     // IDR(s)
+		"-i idr1",                 // IDR(1)
+		"-i minres",               // MINRES
+		"-i cocg",                 // COCG
+		"-i cocr",                 // COCR
+	}
+
+	for _, opt := range options {
+		t.Run(fmt.Sprintf("Option%s", opt), func(t *testing.T) {
+			s, _, _, err := golis.Lsolve(A, b, "", opt)
+			if err != nil {
+				t.Logf("Not correct result: %v", err)
+				return
+			}
+
+			if math.Abs(s.At(0, 0)-2) >= 1e-10 {
+				t.Errorf("Element 0,0 is not correct : %v", s.At(0, 0))
+			}
+			if math.Abs(s.At(1, 0)-1) >= 1e-10 {
+				t.Errorf("Element 1,0 is not correct : %v", s.At(1, 0))
+			}
+		})
+	}
+}
+
 func TestLsolveFail(t *testing.T) {
 	// change location of lis software
 	golis.LisPath = lisPath
