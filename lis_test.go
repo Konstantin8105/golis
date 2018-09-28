@@ -165,7 +165,7 @@ func TestLsolveOptions(t *testing.T) {
 }
 
 func TestLsolveFail(t *testing.T) {
-	tcs := []struct {
+	for i, tc := range []struct {
 		a, b []float64
 	}{
 		// TODO: need internal checking
@@ -200,14 +200,33 @@ func TestLsolveFail(t *testing.T) {
 				1.0,
 			},
 		},
-	}
-
-	for i, tc := range tcs {
+	} {
 		t.Run(fmt.Sprintf("Fail%d", i), func(t *testing.T) {
 			A := mat.NewDense(2, 2, tc.a)
 			B := mat.NewDense(2, 1, tc.b)
 
 			_, _, _, err := golis.Lsolve(A, B, "")
+			t.Logf("\n%v", err)
+			if err == nil {
+				t.Fatalf("Haven`t error : %v", err)
+			}
+		})
+	}
+
+	for i, tc := range []struct {
+		rA, cA, rB, cB int
+	}{
+		{2, 2, 1, 1},
+		{2, 2, 3, 1},
+		{2, 3, 3, 1},
+		{3, 3, 1, 3},
+	} {
+		t.Run(fmt.Sprintf("FailSize%d", i), func(t *testing.T) {
+			A := golis.NewSparseMatrix(tc.rA, tc.cA)
+			B := golis.NewSparseMatrix(tc.rB, tc.cB)
+
+			_, _, _, err := golis.Lsolve(A, B, "")
+			t.Logf("\n%v", err)
 			if err == nil {
 				t.Fatalf("Haven`t error : %v", err)
 			}
