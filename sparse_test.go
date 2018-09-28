@@ -377,4 +377,37 @@ func TestLsolvePanics(t *testing.T) {
 		}()
 		sp.Set(0, 0, math.NaN())
 	})
+
+	t.Run("PanicAddInf-1", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Add(0, 0, math.Inf(-1))
+	})
+
+	t.Run("PanicAddInf+1", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Add(0, 0, math.Inf(1))
+	})
+
+	t.Run("PanicAddNan", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Add(0, 0, math.NaN())
+	})
 }
