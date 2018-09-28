@@ -2,11 +2,16 @@
 
 cd $GOPATH/src/github.com/Konstantin8105/golis/
 
+mkdir bin
+
+LIS_INSTALL_FOLDER=`pwd`
+echo "Lis install folder: $LIS_INSTALL_FOLDER"
+
 git clone https://github.com/anishida/lis.git
 
 cd lis
 
-./configure --enable-quad
+./configure --prefix="$LIS_INSTALL_FOLDER/bin" --enable-quad
 
 make install
 

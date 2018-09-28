@@ -37,11 +37,20 @@ func NewSparseMatrix(r, c int) *SparseMatrix {
 	m := new(SparseMatrix)
 	m.r = r
 	m.c = c
-	size := r
-	if size > c {
-		size = c
+	// allocate memory for triplets
+	switch {
+	case r == 1: // vector
+		m.data.ts = make([]triple, 0, c/2)
+
+	case c == 1: // vector
+		m.data.ts = make([]triple, 0, r/2)
+
+	case r == c: // square matrix
+		m.data.ts = make([]triple, 0, r)
+
+	default:
+		m.data.ts = make([]triple, 0, c)
 	}
-	m.data.ts = make([]triple, 0, size) // minimal allocation
 	return m
 }
 

@@ -3,11 +3,20 @@ package golis_test
 import (
 	"fmt"
 	"math"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/Konstantin8105/golis"
 	"gonum.org/v1/gonum/mat"
 )
+
+func init() {
+	goPath := os.Getenv("GOPATH")
+	lisPath := filepath.Join(goPath, "src/github.com/Konstantin8105/golis/bin/bin")
+
+	golis.LisPath = lisPath
+}
 
 func TestLsolve(t *testing.T) {
 	A := mat.NewDense(2, 2, []float64{
