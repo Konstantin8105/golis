@@ -123,10 +123,10 @@ func (m *SparseMatrix) Set(r, c int, value float64) {
 // checkValue is panic if value is not correct: NaN or infinity.
 func checkValue(v float64) {
 	if math.IsNaN(v) {
-		panic("value is NaN")
+		panic("Value is not valid : NaN")
 	}
 	if math.IsInf(v, 0) {
-		panic("value is infinity")
+		panic("Value is not valid : infinity")
 	}
 }
 

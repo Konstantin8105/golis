@@ -2,6 +2,7 @@ package golis_test
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"testing"
 
@@ -343,4 +344,37 @@ func TestLsolvePanics(t *testing.T) {
 			sp.Set(tc.r, tc.c, 0)
 		})
 	}
+
+	t.Run("PanicSetInf-1", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Set(0, 0, math.Inf(-1))
+	})
+
+	t.Run("PanicSetInf+1", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Set(0, 0, math.Inf(1))
+	})
+
+	t.Run("PanicSetNan", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			t.Logf("\n%v", r)
+			if r == nil {
+				t.Fatal("Haven`t panic for not valid data")
+			}
+		}()
+		sp.Set(0, 0, math.NaN())
+	})
 }
