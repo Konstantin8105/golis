@@ -28,7 +28,7 @@ func TestLsolve(t *testing.T) {
 		9.0,
 	})
 
-	s, _, _, err := golis.Lsolve(A, b, "", "")
+	s, _, _, err := golis.Lsolve(A, b, "")
 	if err != nil {
 		t.Fatalf("Not correct result: %v", err)
 	}
@@ -51,7 +51,7 @@ func TestLsolveQuad(t *testing.T) {
 		2.0e-10,
 	})
 
-	s, _, _, err := golis.Lsolve(A, b, "", "-f quad")
+	s, _, _, err := golis.Lsolve(A, b, "-f quad")
 	if err != nil {
 		t.Fatalf("Not correct result: %v", err)
 	}
@@ -148,7 +148,7 @@ func TestLsolveOptions(t *testing.T) {
 
 	for _, opt := range options {
 		t.Run(fmt.Sprintf("Option%s", opt), func(t *testing.T) {
-			s, _, _, err := golis.Lsolve(A, b, "", opt)
+			s, _, _, err := golis.Lsolve(A, b, opt)
 			if err != nil {
 				t.Log(err)
 				return
@@ -207,7 +207,7 @@ func TestLsolveFail(t *testing.T) {
 			A := mat.NewDense(2, 2, tc.a)
 			B := mat.NewDense(2, 1, tc.b)
 
-			_, _, _, err := golis.Lsolve(A, B, "", "")
+			_, _, _, err := golis.Lsolve(A, B, "")
 			if err == nil {
 				t.Fatalf("Haven`t error : %v", err)
 			}

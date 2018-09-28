@@ -53,13 +53,11 @@ var errorStrings = []string{
 //
 // Description of rhsSetting and options, see in `lis` software documentation.
 // Some examples:
-//	rhsSetting = "0"                          , Use the right-hand side vector b
-//	rhsSetting = "1"                          , Use b = (1, . . . , 1)^T
 //	options    = "-f quad"                    , Use quadriple precision
 //	options    = "-i gmres -restart 20"       , Use solver GMRES with restart 20
 //	options    = "-i bicgstab -maxiter 20000" , Use solver BiCGSTAB with max iteration 20000
 //
-func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
+func Lsolve(A, b mat.Matrix, options string) (
 	solution mat.Matrix,
 	rhistory []float64,
 	output string,
@@ -80,10 +78,6 @@ func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
 			err = fmt.Errorf("Amount of matrix and vector b is not same")
 			return
 		}
-	}
-
-	if rhsSetting == "" {
-		rhsSetting = "0"
 	}
 
 	// TODO: add error tree
@@ -114,7 +108,7 @@ func Lsolve(A, b mat.Matrix, rhsSetting, options string) (
 	// prepare arguments for `lis`
 	args := []string{
 		inputFilename,
-		rhsSetting,
+		"0", // matrix b in inputFilename
 		solutionFilename,
 		rhistoryFilename,
 	}
