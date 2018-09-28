@@ -222,15 +222,16 @@ func (m *SparseMatrix) compress() {
 
 	m.data.amountAdded = 0
 
-	// check result of compression
-	for i := 1; i < len(m.data.ts); i++ {
-		if m.data.ts[i-1].position != m.data.ts[i].position {
-			continue
-		}
-		// not correct compression
-		panic(fmt.Errorf("Not correct compresstion: same position\n%s",
-			m.String()))
-	}
+	// Only for debuging:
+	// // check result of compression
+	// for i := 1; i < len(m.data.ts); i++ {
+	// 	if m.data.ts[i-1].position != m.data.ts[i].position {
+	// 		continue
+	// 	}
+	// 	// not correct compression
+	// 	panic(fmt.Errorf("Not correct compresstion: same position\n%s",
+	// 		m.String()))
+	// }
 }
 
 // TODO : fmt.Formatted
