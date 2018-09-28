@@ -9,9 +9,18 @@ Golang implementation of lis
 
 ### Install `lis`
 
+See documentation of `lis` software.
+
+Example of install in *<<UserDirectory>>*:
 ```
 git clone https://github.com/anishida/lis.git
-./configure --prefix=/home/lepricon/lis --enable-quad
+cd lis
+./configure --prefix=<<UserDiretory>>/lis --enable-quad
 make install
+```
+
+Example of install in folder *$GOPATH/src/github.com/Konstantin8105/golis/bin/*:
+```
+./.travis.sh
 ```
 
