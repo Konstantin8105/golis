@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/Konstantin8105/errors"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -34,6 +35,24 @@ type SparseMatrix struct {
 
 // NewSparseMatrix return new sparse square matrix
 func NewSparseMatrix(r, c int) *SparseMatrix {
+	var et errors.Tree
+	et.Name = "input data checking"
+	if r < 0 {
+		et.Add(fmt.Errorf("Size of rows cannot be less zero : %d", r))
+	}
+	if r == 0 {
+		et.Add(fmt.Errorf("Size of rows cannot be zero"))
+	}
+	if c < 0 {
+		et.Add(fmt.Errorf("Size of columns cannot be less zero : %d", c))
+	}
+	if c == 0 {
+		et.Add(fmt.Errorf("Size of columns cannot be zero"))
+	}
+	if et.IsError() {
+		panic(et)
+	}
+
 	m := new(SparseMatrix)
 	m.r = r
 	m.c = c

@@ -285,3 +285,22 @@ func BenchmarkAt(b *testing.B) {
 		})
 	}
 }
+
+func TestLsolvePanics(t *testing.T) {
+	for i, tc := range []struct{ r, c int }{
+		{0, 0},
+		{-1, 5},
+		{5, -1},
+		{-1, -1},
+	} {
+		t.Run(fmt.Sprintf("Panic%d", i), func(t *testing.T) {
+			defer func() {
+				if r := recover(); r == nil {
+					t.Logf("r %v", r)
+					t.Fatal("Haven`t panic for not valid data")
+				}
+			}()
+			_ = golis.NewSparseMatrix(tc.r, tc.c)
+		})
+	}
+}
