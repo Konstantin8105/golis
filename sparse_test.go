@@ -231,6 +231,13 @@ func TestSparseMatrix(t *testing.T) {
 			t.Fatalf("Value is not same:\n%s\n%#v", stt, a)
 		}
 	})
+
+	t.Run("String empty sparse matrix", func(t *testing.T) {
+		s := golis.NewSparseMatrix(2, 3)
+		if len(s.String()) == 0 {
+			t.Fatalf("String for empty sparse matrix is empty")
+		}
+	})
 }
 
 func isSame(s mat.Matrix, a mat.Matrix) bool {
