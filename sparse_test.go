@@ -238,6 +238,29 @@ func TestSparseMatrix(t *testing.T) {
 			t.Fatalf("String for empty sparse matrix is empty")
 		}
 	})
+
+	t.Run("SetZeroForRowColumn", func(t *testing.T) {
+		a := mat.NewDense(3, 3, []float64{
+			8, 1, 6,
+			3, 5, 7,
+			4, 0, 2,
+		})
+		s := golis.NewSparseMatrix(3, 3)
+		for i := 0; i < 3; i++ {
+			for j := 0; j < 3; j++ {
+				s.Add(i, j, a.At(i, j))
+			}
+		}
+		a.Set(0, 0, 0.0)
+		a.Set(1, 0, 0.0)
+		a.Set(2, 0, 0.0)
+		a.Set(0, 1, 0.0)
+		a.Set(0, 2, 0.0)
+		s.SetZeroForRowColumn(0)
+		if !isSame(s, a) {
+			t.Fatalf("Value is not same:\n%s\n%#v", s, a)
+		}
+	})
 }
 
 func isSame(s mat.Matrix, a mat.Matrix) bool {
@@ -330,7 +353,7 @@ func BenchmarkAt(b *testing.B) {
 	}
 }
 
-func TestLsolvePanics(t *testing.T) {
+func TestSparseMatrixPanics(t *testing.T) {
 	for i, tc := range []struct{ r, c int }{
 		{0, 0},
 		{-1, 5},
@@ -385,6 +408,22 @@ func TestLsolvePanics(t *testing.T) {
 				}
 			}()
 			sp.Set(tc.r, tc.c, 0)
+		})
+	}
+
+	for i, tc := range []struct{ rc int }{
+		{-1},
+		{5},
+	} {
+		t.Run(fmt.Sprintf("PanicSetZeroRowAndColumn%d", i), func(t *testing.T) {
+			defer func() {
+				r := recover()
+				t.Logf("\n%v", r)
+				if r == nil {
+					t.Fatal("Haven`t panic for not valid data: ", tc)
+				}
+			}()
+			sp.SetZeroForRowColumn(tc.rc)
 		})
 	}
 

@@ -125,6 +125,25 @@ func (m *SparseMatrix) Set(r, c int, value float64) {
 	m.data.amountAdded++
 }
 
+// SetZeroForRowColumn set zero for all matrix element on
+// row and column `rc`
+func (m *SparseMatrix) SetZeroForRowColumn(rc int) {
+	m.check(rc, rc)
+	for i := range m.data.ts {
+		if int(m.data.ts[i].position%int64(m.r)) == rc {
+			// zero on rows
+			m.data.ts[i].d = 0.0
+			continue
+		}
+		if int(m.data.ts[i].position/int64(m.r)) == rc {
+			// zero on columns
+			m.data.ts[i].d = 0.0
+			continue
+		}
+	}
+	m.data.amountAdded = -1
+}
+
 // checkValue is panic if value is not correct: NaN or infinity.
 func checkValue(v float64) {
 	if math.IsNaN(v) {
