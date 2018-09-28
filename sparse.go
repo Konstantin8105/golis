@@ -17,6 +17,13 @@ type triple struct {
 	d        float64 // data
 }
 
+// byTriple implements sort.Interface based on the position field.
+type byTriple []triple
+
+func (a byTriple) Len() int           { return len(a) }
+func (a byTriple) Less(i, j int) bool { return a[i].position < a[j].position }
+func (a byTriple) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+
 // TODO add research for finding limit size
 // TODO create guarantee for memory = amount of non-zero element + size
 // TODO use memory blocks for triples separate by size L2 cache
@@ -163,9 +170,7 @@ func (m *SparseMatrix) compress() {
 	}
 
 	// sort by position
-	sort.SliceStable(m.data.ts, func(i, j int) bool {
-		return m.data.ts[i].position < m.data.ts[j].position
-	})
+	sort.Sort(byTriple(m.data.ts))
 
 	// summarize element with same indexes row, column and add 0.0 in old element
 	for i := 1; i < len(m.data.ts); i++ {
