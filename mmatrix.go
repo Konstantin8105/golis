@@ -33,10 +33,16 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 
 	// amount of non-zero values
 	var nonZeros int
-	for i := 0; i < rA; i++ {
-		for j := 0; j < cA; j++ {
-			if A.At(i, j) != 0.0 {
-				nonZeros++
+	// TODO add optimization for SparseMatrix
+	switch v := A.(type) {
+	case *SparseMatrix:
+		nonZeros = len(v.data.ts)
+	default:
+		for i := 0; i < rA; i++ {
+			for j := 0; j < cA; j++ {
+				if A.At(i, j) != 0.0 {
+					nonZeros++
+				}
 			}
 		}
 	}
@@ -46,16 +52,34 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 
 	// write matrix A
 	// TODO add optimization for SparseMatrix
-	for i := 0; i < rA; i++ {
-		for j := 0; j < cA; j++ {
-			if A.At(i, j) != 0.0 {
-				buf.WriteString(fmt.Sprintf("%d %d %20.16e\n", i+1, j+1, A.At(i, j)))
+	switch v := A.(type) {
+	case *SparseMatrix:
+		for i := range v.data.ts {
+			r := int(v.data.ts[i].position % int64(v.r))
+			c := int(v.data.ts[i].position / int64(v.r))
+			buf.WriteString(fmt.Sprintf("%d %d %20.16e\n", r+1, c+1, v.data.ts[i].d))
+		}
+	default:
+		for i := 0; i < rA; i++ {
+			for j := 0; j < cA; j++ {
+				if A.At(i, j) != 0.0 {
+					buf.WriteString(fmt.Sprintf("%d %d %20.16e\n", i+1, j+1, A.At(i, j)))
+				}
 			}
 		}
 	}
 	// write vector b
-	for i := 0; i < rb; i++ {
-		buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
+	// TODO add optimization for SparseMatrix
+	switch v := b.(type) {
+	case *SparseMatrix:
+		for i := range v.data.ts {
+			r := int(v.data.ts[i].position % int64(v.r))
+			buf.WriteString(fmt.Sprintf("%d %20.16e\n", r+1, v.data.ts[i].d))
+		}
+	default:
+		for i := 0; i < rb; i++ {
+			buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
+		}
 	}
 
 	return buf.Bytes()
