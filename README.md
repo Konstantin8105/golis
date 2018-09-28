@@ -15,9 +15,9 @@ go get -u github.com/Konstantin8105/golis
 
 ### Install `lis`
 
-See documentation of `lis` software.
+See documentation of [`lis`](https://github.com/anishida/lis) software.
 
-Example of install in *<<UserDirectory>>*:
+Example of install in **UserDirectory**:
 ```
 # clone Git repository
 git clone https://github.com/anishida/lis.git
@@ -26,13 +26,13 @@ git clone https://github.com/anishida/lis.git
 cd lis
 
 # run configuration with quadriple precision
-./configure --prefix=<<UserDiretory>>/lis --enable-quad
+./configure --prefix=<<UserDirectory>>/lis --enable-quad
 
 # install
 make install
 ```
 
-Example of install in folder *$GOPATH/src/github.com/Konstantin8105/golis/bin/*:
+Example of install in folder **$GOPATH/src/github.com/Konstantin8105/golis/bin/**:
 ```
 ./.travis.sh
 ```
