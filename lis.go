@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Konstantin8105/errors"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -64,23 +65,24 @@ func Lsolve(A, b mat.Matrix, options string) (
 	err error) {
 
 	// check size of input Matrixs
-	if r, c := A.Dims(); r != c && r > 0 {
-		err = fmt.Errorf("Matrix A is not square: [%d,%d]", r, c)
-		return
+	var et errors.Tree
+	et.Name = "Check input matrix A and vector b"
+	if r, c := A.Dims(); r != c {
+		et.Add(fmt.Errorf("Matrix A is not square: [%d,%d]", r, c))
 	}
 	if r, c := b.Dims(); !(r > 0 && c == 1) {
-		err = fmt.Errorf("Vector b is not vertical vector: [%d,%d]", r, c)
-		return
+		et.Add(fmt.Errorf("Vector b is not vertical vector: [%d,%d]", r, c))
 	}
 	{
 		r, _ := A.Dims()
 		if rb, _ := b.Dims(); r != rb {
-			err = fmt.Errorf("Amount of matrix and vector b is not same")
-			return
+			et.Add(fmt.Errorf("Amount of matrix and vector b is not same"))
 		}
 	}
-
-	// TODO: add error tree
+	if et.IsError() {
+		err = et
+		return
+	}
 
 	// create a temp folder
 	tmpDir, err := ioutil.TempDir("", "")
