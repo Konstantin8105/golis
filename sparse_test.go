@@ -295,12 +295,32 @@ func TestLsolvePanics(t *testing.T) {
 	} {
 		t.Run(fmt.Sprintf("Panic%d", i), func(t *testing.T) {
 			defer func() {
-				if r := recover(); r == nil {
-					t.Logf("r %v", r)
+				r := recover()
+				t.Logf("\n%v", r)
+				if r == nil {
 					t.Fatal("Haven`t panic for not valid data")
 				}
 			}()
 			_ = golis.NewSparseMatrix(tc.r, tc.c)
 		})
 	}
+
+	sp := golis.NewSparseMatrix(3, 2)
+	for i, tc := range []struct{ r, c int }{
+		{-1, 1},
+		{1, -1},
+		{-1, -1},
+	} {
+		t.Run(fmt.Sprintf("PanicAt%d", i), func(t *testing.T) {
+			defer func() {
+				r := recover()
+				t.Logf("\n%v", r)
+				if r == nil {
+					t.Fatal("Haven`t panic for not valid data: ", tc)
+				}
+			}()
+			_ = sp.At(tc.r, tc.c)
+		})
+	}
+
 }

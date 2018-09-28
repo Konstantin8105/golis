@@ -36,7 +36,7 @@ type SparseMatrix struct {
 // NewSparseMatrix return new sparse square matrix
 func NewSparseMatrix(r, c int) *SparseMatrix {
 	var et errors.Tree
-	et.Name = "input data checking"
+	et.Name = "Check size of matrix"
 	if r < 0 {
 		et.Add(fmt.Errorf("Size of rows cannot be less zero : %d", r))
 	}
@@ -131,12 +131,23 @@ func checkValue(v float64) {
 }
 
 func (m *SparseMatrix) check(r, c int) {
-	// TODO : add tree error panic
-	if r < 0 || r >= m.r {
-		panic("index out of range for rows")
+	var et errors.Tree
+	et.Name = "Check input indexes of element"
+
+	if r < 0 {
+		et.Add(fmt.Errorf("Index of rows cannot be less zero : %d", r))
 	}
-	if c < 0 || c >= m.c {
-		panic("index out of range for columns")
+	if r >= m.r {
+		et.Add(fmt.Errorf("Index of rows is outside of matrix: %d of %d", r, m.r))
+	}
+	if c < 0 {
+		et.Add(fmt.Errorf("Index of columns cannot be less zero : %d", c))
+	}
+	if c >= m.c {
+		et.Add(fmt.Errorf("Index of columns is outside of matrix: %d of %d", c, m.c))
+	}
+	if et.IsError() {
+		panic(et)
 	}
 }
 
