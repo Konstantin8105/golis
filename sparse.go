@@ -37,7 +37,11 @@ func NewSparseMatrix(r, c int) *SparseMatrix {
 	m := new(SparseMatrix)
 	m.r = r
 	m.c = c
-	m.data.ts = make([]triple, 0, r*c) // TODO: may be size must be more
+	size := r
+	if size > c {
+		size = c
+	}
+	m.data.ts = make([]triple, 0, size) // minimal allocation
 	return m
 }
 
