@@ -310,6 +310,8 @@ func TestLsolvePanics(t *testing.T) {
 		{-1, 1},
 		{1, -1},
 		{-1, -1},
+		{5, 1},
+		{1, 5},
 	} {
 		t.Run(fmt.Sprintf("PanicAt%d", i), func(t *testing.T) {
 			defer func() {
@@ -323,4 +325,22 @@ func TestLsolvePanics(t *testing.T) {
 		})
 	}
 
+	for i, tc := range []struct{ r, c int }{
+		{-1, 1},
+		{1, -1},
+		{-1, -1},
+		{5, 1},
+		{1, 5},
+	} {
+		t.Run(fmt.Sprintf("PanicSet%d", i), func(t *testing.T) {
+			defer func() {
+				r := recover()
+				t.Logf("\n%v", r)
+				if r == nil {
+					t.Fatal("Haven`t panic for not valid data: ", tc)
+				}
+			}()
+			sp.Set(tc.r, tc.c, 0)
+		})
+	}
 }
