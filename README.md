@@ -7,6 +7,12 @@
 # golis
 Golang implementation of lis
 
+### Install `golis`
+
+```
+go get -u github.com/Konstantin8105/golis
+```
+
 ### Install `lis`
 
 See documentation of `lis` software.
