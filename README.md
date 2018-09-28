@@ -19,9 +19,16 @@ See documentation of `lis` software.
 
 Example of install in *<<UserDirectory>>*:
 ```
+# clone Git repository
 git clone https://github.com/anishida/lis.git
+
+# enter in folder
 cd lis
+
+# run configuration with quadriple precision
 ./configure --prefix=<<UserDiretory>>/lis --enable-quad
+
+# install
 make install
 ```
 
