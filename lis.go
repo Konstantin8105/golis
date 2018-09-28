@@ -17,59 +17,6 @@ import (
 //	golis.LisPath = "/home/user/lis/bin/"
 var LisPath string
 
-// convertMatrixWithVector - convert matrix and vector to byte slice in
-// Matrix Market format
-// See description:
-// https://math.nist.gov/MatrixMarket/formats.html
-//
-// Coordinate Format for Sparse Matrices
-// Format of MM        : coordinate
-// Type of output data : matrix with vector
-// Type of values      : real
-// Type of matrix      : general
-func convertMatrixWithVector(A, b mat.Matrix) []byte {
-	// TODO : add to specific package mmatrix
-	var buf bytes.Buffer
-
-	buf.WriteString("%%MatrixMarket matrix coordinate real general\n")
-
-	rA, cA := A.Dims()
-	rb, cb := b.Dims()
-
-	if cb != 1 {
-		panic(fmt.Errorf("Input `b` is not vector: [%d,%d]", rb, cb))
-	}
-
-	// amount of non-zero values
-	var nonZeros int
-	for i := 0; i < rA; i++ {
-		for j := 0; j < cA; j++ {
-			if A.At(i, j) != 0.0 {
-				nonZeros++
-			}
-		}
-	}
-	// write sizes
-	// TODO: is need "1 0"
-	buf.WriteString(fmt.Sprintf("%d %d %d 1 0\n", rA, cA, nonZeros))
-
-	// write matrix A
-	// TODO add optimization for SparseMatrix
-	for i := 0; i < rA; i++ {
-		for j := 0; j < cA; j++ {
-			if A.At(i, j) != 0.0 {
-				buf.WriteString(fmt.Sprintf("%d %d %20.16e\n", i+1, j+1, A.At(i, j)))
-			}
-		}
-	}
-	// write vector b
-	for i := 0; i < rb; i++ {
-		buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
-	}
-
-	return buf.Bytes()
-}
-
 // ErrorValue is error retirn value as result of `lis` software working
 type ErrorValue int
 
