@@ -41,7 +41,11 @@ func (m *SparseMatrixSymmetric) Dims() (r, c int) {
 // This method may be implemented using the Transpose type, which
 // provides an implicit matrix transpose.
 func (m *SparseMatrixSymmetric) T() mat.Matrix {
-	return m.s.T()
+	c := new(SparseMatrixSymmetric)
+	c.s = new(SparseMatrix)
+	c.s.data.ts = make([]triple, len(m.s.data.ts))
+	copy(c.s.data.ts, m.s.data.ts)
+	return c
 }
 
 // Symmetric returns the number of rows/columns in the matrix.
@@ -65,11 +69,15 @@ func (m *SparseMatrixSymmetric) Add(r, c int, value float64) {
 	if r > c {
 		panic(fmt.Errorf("SparseMatrixSymmetric have only upper value: %d <= %d", r, c))
 	}
-	m.s.Set(r, c, value)
+	m.s.Add(r, c, value)
 }
 
 // SetZeroForRowColumn set zero for all matrix element on
 // row and column `rc`
 func (m *SparseMatrixSymmetric) SetZeroForRowColumn(rc int) {
 	m.s.SetZeroForRowColumn(rc)
+}
+
+func (m *SparseMatrixSymmetric) String() string {
+	return m.s.String()
 }

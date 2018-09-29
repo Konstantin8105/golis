@@ -120,8 +120,7 @@ func (m *SparseMatrix) Set(r, c int, value float64) {
 		return
 	}
 
-	// TODO: append can multiply memory by 2 - it is not effective
-	m.data.ts = append(m.data.ts, triple{position: position, d: value})
+	m.data.ts = m.appendTriple(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
 }
 
@@ -297,8 +296,7 @@ func (m *SparseMatrix) Add(r, c int, value float64) {
 		return
 	}
 	position := int64(r) + int64(c)*int64(m.r) // calculate position
-	// TODO: append can multiply memory by 2 - it is not effective
-	m.data.ts = append(m.data.ts, triple{position: position, d: value})
+	m.data.ts = m.appendTriple(m.data.ts, triple{position: position, d: value})
 	m.data.amountAdded++
 	max := m.c
 	if m.r > m.c {
@@ -346,3 +344,23 @@ func (m *SparseMatrix) Dims() (r, c int) {
 
 // TODO: add function of matrix : get Min and Max absolute value for checking singular
 // TODO: need research of memory for operation Add
+
+// TODO: append can multiply memory by 2 - it is not effective
+
+func (m *SparseMatrix) appendTriple(x []triple, y triple) []triple {
+	var z []triple
+	zlen := len(x) + 1
+	if zlen <= cap(x) {
+		z = x[:zlen]
+	} else {
+		zcap := zlen
+		// TODO: research effective for vector and square matrix
+		if zcap < len(x)+m.r*2 {
+			zcap = len(x) + m.r*2
+		}
+		z = make([]triple, zlen, zcap)
+		copy(z, x)
+	}
+	z[len(x)] = y
+	return z
+}
