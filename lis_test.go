@@ -233,3 +233,26 @@ func TestLsolveFail(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkLsolve(b *testing.B) {
+	size := 500
+
+	A := mat.NewDense(size, size, nil)
+	B := mat.NewDense(size, 1, nil)
+	for i := 0; i < size; i++ {
+		B.Set(i, 0, float64(i))
+		for j := 0; j < size; j++ {
+			if j > i-5 && j < i+5 {
+				A.Set(i, j, float64(i+5*j))
+			}
+		}
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _, _, err := golis.Lsolve(A, B, "-maxiter 40000")
+		if err != nil {
+			panic(err)
+		}
+	}
+}
