@@ -26,7 +26,7 @@ git clone https://github.com/anishida/lis.git
 cd lis
 
 # run configuration with quadriple precision
-./configure --prefix=<<UserDirectory>>/lis --enable-quad
+./configure --prefix=<<UserDirectory>>/lis --enable-quad --enable-omp
 
 # install
 make install
