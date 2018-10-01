@@ -11,7 +11,7 @@ git clone https://github.com/anishida/lis.git
 
 cd lis
 
-./configure --prefix="$LIS_INSTALL_FOLDER/bin" --enable-quad --enable-mpi
+./configure --prefix="$LIS_INSTALL_FOLDER/bin" --enable-quad
 
 make install
 
