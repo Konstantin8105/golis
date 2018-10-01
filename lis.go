@@ -101,7 +101,7 @@ func Lsolve(A, b mat.Matrix, options string) (
 
 	// temp files
 	var (
-		inputFilename    = fn("input")
+		inputFilename    = fn("input.mtx")
 		solutionFilename = fn("solution.mtx")
 		rhistoryFilename = fn("rhistory.txt")
 	)
