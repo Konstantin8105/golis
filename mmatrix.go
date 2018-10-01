@@ -51,7 +51,6 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	buf.WriteString(fmt.Sprintf("%d %d %d 1 0\n", rA, cA, nonZeros))
 
 	// write matrix A
-	// TODO add optimization for SparseMatrix
 	switch v := A.(type) {
 	case *SparseMatrix:
 		v.compress()
@@ -88,11 +87,7 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 //  2   2.49999999999999955591e+00
 //  3   4.99999999999999911182e+00
 //
-func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
-
-	// TODO add optimization for SparseMatrix
-	v = new(SparseMatrix)
-
+func ParseSparseMatrix(b []byte) (mat.Matrix, error) {
 	lines := bytes.Split(b, []byte("\n"))
 
 	// TODO: check vector
@@ -104,10 +99,8 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 		err = fmt.Errorf("Cannot parse size `%v`: %v", string(lines[1]), err)
 		return nil, err
 	}
-	v.r = int(s)
-	v.c = 1
 
-	v.data.ts = make([]triple, 0, v.r)
+	v := mat.NewDense(int(s), 1, nil)
 
 	// convert values
 	for i := range lines {
@@ -118,16 +111,17 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 			continue
 		}
 		pars := bytes.Split(lines[i], []byte(" "))
-		var t triple
+
 		// parse index
 		s, err := strconv.ParseInt(string(pars[0]), 10, 64)
 		if err != nil {
 			err = fmt.Errorf("Cannot parse index `%v`: %v", string(pars[0]), err)
 			return nil, err
 		}
-		t.position = s - 1 // in MatrixMarket index from 1, but not zero
+		pos := int(s - 1) // in MatrixMarket index from 1, but not zero
 
 		// parse value
+		var val float64
 		for pos := 1; pos < len(pars); pos++ {
 			if len(pars[pos]) == 0 {
 				continue
@@ -137,14 +131,10 @@ func ParseSparseMatrix(b []byte) (v *SparseMatrix, err error) {
 				err = fmt.Errorf("Cannot parse value `%v`: %v", string(pars[pos]), err)
 				return nil, err
 			}
-			t.d = s
+			val = s
 		}
-		v.data.ts = append(v.data.ts, t)
+		v.Set(pos, 0, val)
 	}
-
-	// compress
-	v.data.amountAdded = -1
-	v.compress()
 
 	return v, nil
 }
