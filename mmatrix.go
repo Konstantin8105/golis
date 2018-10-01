@@ -47,7 +47,7 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 		}
 	}
 	// write sizes
-	// TODO: is need "1 0"
+	// add string "1 0" for indicate that is matrix with vector
 	buf.WriteString(fmt.Sprintf("%d %d %d 1 0\n", rA, cA, nonZeros))
 
 	// write matrix A
