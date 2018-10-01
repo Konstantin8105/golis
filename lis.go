@@ -91,7 +91,10 @@ func Lsolve(A, b mat.Matrix, options string) (
 	}
 	defer func() {
 		if err != nil {
-			err = fmt.Errorf("%v\nTemp folder: %v", err, tmpDir)
+			var et errors.Tree
+			et.Add(err)
+			et.Add(fmt.Errorf("Temp folder: %v", tmpDir))
+			err = et
 		}
 	}()
 
@@ -121,11 +124,18 @@ func Lsolve(A, b mat.Matrix, options string) (
 	}
 	args = append(args, strings.Split(options, " ")...)
 
-	out, err := exec.Command(filepath.Join(LisPath, "lsolve"), args...).Output()
+	cmd := exec.Command(filepath.Join(LisPath, "lsolve"), args...)
+	var outBuf bytes.Buffer
+	cmd.Stdout = &outBuf
+	var errBuf bytes.Buffer
+	cmd.Stderr = &errBuf
+	err = cmd.Run()
 	if err != nil {
-		err = fmt.Errorf("Error result of execute `lsolve`: %v", err)
+		err = fmt.Errorf("Error result of execute `lsolve`: %v\n%v\n%v",
+			err, outBuf.String(), errBuf.String())
 		return
 	}
+	out := outBuf.Bytes()
 
 	// Example of result parsing:
 	// linear solver status  : normal end
