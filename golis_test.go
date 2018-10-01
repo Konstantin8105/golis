@@ -10,8 +10,6 @@ import (
 	"testing"
 )
 
-// TODO add instal lis in travis
-
 func TestTodo(t *testing.T) {
 	// Show all to do`s in comment code
 	source, err := filepath.Glob(fmt.Sprintf("./%s", "*.go"))
