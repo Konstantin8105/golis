@@ -54,6 +54,7 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	// TODO add optimization for SparseMatrix
 	switch v := A.(type) {
 	case *SparseMatrix:
+		v.compress()
 		for i := range v.data.ts {
 			r := int(v.data.ts[i].position % int64(v.r))
 			c := int(v.data.ts[i].position / int64(v.r))
@@ -72,6 +73,7 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	// TODO add optimization for SparseMatrix
 	switch v := b.(type) {
 	case *SparseMatrix:
+		v.compress()
 		for i := range v.data.ts {
 			r := int(v.data.ts[i].position % int64(v.r))
 			buf.WriteString(fmt.Sprintf("%d %20.16e\n", r+1, v.data.ts[i].d))

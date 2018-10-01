@@ -89,6 +89,11 @@ func Lsolve(A, b mat.Matrix, options string) (
 	if err != nil {
 		return
 	}
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("%v\nTemp folder: %v", err, tmpDir)
+		}
+	}()
 
 	fn := func(name string) string {
 		return filepath.Join(tmpDir, string(filepath.Separator), name)
