@@ -248,11 +248,12 @@ func BenchmarkLsolve(b *testing.B) {
 		}
 	}
 
+	var err error
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, _, _, err := golis.Lsolve(A, B, "-maxiter 40000")
+		_, r, _, err = golis.Lsolve(A, B, "-f quad -maxiter 40000")
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
 		}
 	}
 }
