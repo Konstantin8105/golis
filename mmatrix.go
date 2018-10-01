@@ -71,18 +71,19 @@ func convertMatrixWithVector(A, b mat.Matrix) []byte {
 	}
 	// write vector b
 	// TODO add optimization for SparseMatrix
-	switch v := b.(type) {
-	case *SparseMatrix:
-		v.compress()
-		for i := range v.data.ts {
-			r := int(v.data.ts[i].position % int64(v.r))
-			buf.WriteString(fmt.Sprintf("%d %20.16e\n", r+1, v.data.ts[i].d))
-		}
-	default:
-		for i := 0; i < rb; i++ {
-			buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
-		}
+	// switch v := b.(type) {
+	// case *SparseMatrix:
+	// 	v.compress()
+	// TODO: wait fix bug in software `lis`
+	// 	for i := range v.data.ts {
+	// 		r := int(v.data.ts[i].position % int64(v.r))
+	// 		buf.WriteString(fmt.Sprintf("%d %20.16e\n", r+1, v.data.ts[i].d))
+	// 	}
+	// default:
+	for i := 0; i < rb; i++ {
+		buf.WriteString(fmt.Sprintf("%d %20.16e\n", i+1, b.At(i, 0)))
 	}
+	// }
 
 	return buf.Bytes()
 }
